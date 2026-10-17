@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Abrar Ayman — UI/UX Designer & Flutter Developer</title>
+<meta name="description" content="Portfolio of Abrar Ayman, UI/UX Designer and Flutter Developer based in Alexandria, Egypt." />
+<meta name="theme-color" content="#121213" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Parkinsans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<style>
+/* ==========================================================================
+   1. DESIGN TOKENS  (same system as hipuku: named colour hues, type, space,
+      radius, opacity — all CSS custom properties, tweakable from the hero)
+   ========================================================================== */
+:root {
+  /* surfaces */
+  --bg: #121213;
+  --surface: #1c1c1d;
+  --surface-2: #252527;
+  --ink: #f4f2ee;
+  --ink-muted: #9b9ba1;
+  --line: rgba(255, 255, 255, 0.1);
+
+  /* hues (named after stars, like the original) */
+  --colour-quasar:    #bf9ff1;  /* lavender  */
+  --colour-pulsar:    #68d0ca;  /* teal      */
+  --colour-corona:    #f28bad;  /* pink      */
+  --colour-supernova: #f78d2c;  /* orange    */
+  --colour-flare:     #e15e42;  /* red       */
+  --colour-nebula:    #7193ed;  /* blue      */
+  --colour-solstice:  #ffc700;  /* yellow    */
+  --colour-orbit:     #73bde7;  /* sky       */
+  --colour-tidal:     #15ad70;  /* green     */
+  --colour-aurora:    #f5d4c0;  /* peach     */
+
+  /* derived tones: -light / -dark / -deep for every hue */
+  --colour-quasar-light:    color-mix(in oklab, var(--colour-quasar) 55%, #fff);
+  --colour-pulsar-light:    color-mix(in oklab, var(--colour-pulsar) 55%, #fff);
+  --colour-corona-light:    color-mix(in oklab, var(--colour-corona) 55%, #fff);
+  --colour-supernova-light: color-mix(in oklab, var(--colour-supernova) 55%, #fff);
+  --colour-flare-light:     color-mix(in oklab, var(--colour-flare) 55%, #fff);
+  --colour-nebula-light:    color-mix(in oklab, var(--colour-nebula) 55%, #fff);
+  --colour-solstice-light:  color-mix(in oklab, var(--colour-solstice) 55%, #fff);
+  --colour-orbit-light:     color-mix(in oklab, var(--colour-orbit) 55%, #fff);
+  --colour-tidal-light:     color-mix(in oklab, var(--colour-tidal) 55%, #fff);
+  --colour-aurora-light:    color-mix(in oklab, var(--colour-aurora) 55%, #fff);
+  --colour-quasar-dark:    color-mix(in oklab, var(--colour-quasar) 70%, #000);
+  --colour-pulsar-dark:    color-mix(in oklab, var(--colour-pulsar) 70%, #000);
+  --colour-corona-dark:    color-mix(in oklab, var(--colour-corona) 70%, #000);
+  --colour-supernova-dark: color-mix(in oklab, var(--colour-supernova) 70%, #000);
+  --colour-flare-dark:     color-mix(in oklab, var(--colour-flare) 70%, #000);
+  --colour-nebula-dark:    color-mix(in oklab, var(--colour-nebula) 70%, #000);
+  --colour-solstice-dark:  color-mix(in oklab, var(--colour-solstice) 70%, #000);
+  --colour-orbit-dark:     color-mix(in oklab, var(--colour-orbit) 70%, #000);
+  --colour-tidal-dark:     color-mix(in oklab, var(--colour-tidal) 70%, #000);
+  --colour-aurora-dark:    color-mix(in oklab, var(--colour-aurora) 70%, #000);
+  --colour-quasar-deep:    color-mix(in oklab, var(--colour-quasar) 22%, #000);
+  --colour-pulsar-deep:    color-mix(in oklab, var(--colour-pulsar) 22%, #000);
+  --colour-corona-deep:    color-mix(in oklab, var(--colour-corona) 22%, #000);
+  --colour-supernova-deep: color-mix(in oklab, var(--colour-supernova) 22%, #000);
+  --colour-flare-deep:     color-mix(in oklab, var(--colour-flare) 22%, #000);
+  --colour-nebula-deep:    color-mix(in oklab, var(--colour-nebula) 22%, #000);
+  --colour-solstice-deep:  color-mix(in oklab, var(--colour-solstice) 22%, #000);
+  --colour-orbit-deep:     color-mix(in oklab, var(--colour-orbit) 22%, #000);
+  --colour-tidal-deep:     color-mix(in oklab, var(--colour-tidal) 22%, #000);
+  --colour-aurora-deep:    color-mix(in oklab, var(--colour-aurora) 22%, #000);
+
+  /* type */
+  --font-display: "Parkinsans", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-hand: "Caveat", cursive;
+
+  /* spacing scale (4px base) */
+  --space-1: 8px;  --space-2: 12px;  --space-3: 16px; --space-4: 24px;
+  --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 72px; --space-9: 120px;
+
+  /* radius + opacity (the Radius / Opacity tools in the hero edit these) */
+  --radius: 20px;
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-pill: 999px;
+  --hero-alpha: 1;
+  --hero-scale: 1;
+  --hero-track: -0.04em;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --nav-h: 72px;
+  --wrap: 1240px;
+}
+
+/* ==========================================================================
+   2. BASE
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 16px); }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 400 1rem/1.6 var(--font-body); -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+body.is-loading { overflow: hidden; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; margin: 0; padding: 0; }
+h1, h2, h3, p { margin: 0; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+::selection { background: var(--colour-quasar); color: #121213; }
+:focus-visible { outline: 2px solid var(--colour-pulsar); outline-offset: 3px; border-radius: 6px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip-link { position: fixed; top: -60px; left: 16px; z-index: 1000; background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: var(--radius-pill); transition: top .2s; }
+.skip-link:focus { top: 16px; }
+.wrap { width: min(var(--wrap), 100% - 48px); margin-inline: auto; }
+
+.type-h2 { font: 700 clamp(2.4rem, 6vw, 4.5rem)/1 var(--font-display); letter-spacing: -0.035em; }
+.type-h3 { font: 700 clamp(1.5rem, 2.4vw, 2rem)/1.1 var(--font-display); letter-spacing: -0.025em; }
+.type-p-lg { font-size: clamp(1.1rem, 1.6vw, 1.35rem); line-height: 1.5; }
+.type-p-sm { font-size: .9rem; line-height: 1.5; }
+.type-mono { font-family: var(--font-mono); }
+.type-label { font: 500 .72rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+.type-annotation { font: 600 1.25rem/1 var(--font-hand); }
+
+/* ==========================================================================
+   3. PAGE CURTAIN (three layers wipe up on load)
+   ========================================================================== */
+.curtain { position: fixed; inset: 0; z-index: 2000; pointer-events: none; }
+.curtain__layer { position: absolute; inset: 0; transform: translateY(0); animation: curtain .9s var(--ease) forwards; }
+.curtain__layer--dark  { background: #000; animation-delay: .05s; }
+.curtain__layer--base  { background: var(--colour-quasar); animation-delay: .17s; }
+.curtain__layer--light { background: var(--bg); animation-delay: .29s; }
+@keyframes curtain { to { transform: translateY(-101%); } }
+.curtain.is-done { display: none; }
+
+/* ==========================================================================
+   4. NAV
+   ========================================================================== */
+.nav-wrapper { position: fixed; inset: 0 0 auto 0; z-index: 100; transition: background .3s, backdrop-filter .3s, border-color .3s; border-bottom: 1px solid transparent; }
+.nav-wrapper.is-stuck { background: rgba(18, 18, 19, .78); backdrop-filter: blur(14px); border-color: var(--line); }
+.nav { width: min(var(--wrap), 100% - 48px); height: var(--nav-h); margin-inline: auto; display: flex; align-items: center; justify-content: space-between; gap: var(--space-5); }
+.nav__logo { font: 600 1.05rem/1 var(--font-mono); letter-spacing: -.02em; display: inline-flex; gap: 2px; white-space: nowrap; }
+.nav__logo .t { color: var(--colour-quasar); transition: color .25s; }
+.nav__logo:hover .t { color: var(--colour-corona); }
+.nav__logo .n { color: var(--ink); }
+.nav__right { display: flex; align-items: center; gap: var(--space-5); }
+.nav__links { display: flex; gap: var(--space-5); }
+.nav__link { position: relative; display: inline-flex; align-items: flex-start; font: 500 .95rem/1 var(--font-mono); padding: 8px 0; color: var(--ink); transition: color .2s; }
+.nav__link .slash { color: var(--count-colour); opacity: .9; margin-left: 4px; }
+.nav__count { font-size: .6rem; color: var(--count-colour); margin-left: 3px; transform: translateY(-3px); }
+.nav__link::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--link-hover-colour); border-radius: 2px; transform: scaleX(0); transform-origin: left; transition: transform .35s var(--ease); }
+.nav__link:hover, .nav__link[aria-current="true"] { color: var(--link-hover-colour); }
+.nav__link:hover::after, .nav__link[aria-current="true"]::after { transform: scaleX(1); }
+.nav__divider { width: 1px; height: 22px; background: var(--line); }
+.status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border: 1px solid var(--line); border-radius: var(--radius-pill); font: 500 .75rem/1 var(--font-mono); color: var(--colour-tidal-light); white-space: nowrap; }
+.status-pill i { width: 8px; height: 8px; border-radius: 50%; background: var(--colour-tidal); box-shadow: 0 0 0 0 var(--colour-tidal); animation: ping 2s infinite; }
+@keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(21,173,112,.6); } 70%,100% { box-shadow: 0 0 0 10px rgba(21,173,112,0); } }
+.nav__hamburger { display: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); place-items: center; }
+.nav__hamburger span, .nav__hamburger span::before { display: block; width: 18px; height: 2px; background: var(--ink); border-radius: 2px; position: relative; transition: transform .3s var(--ease); }
+.nav__hamburger span::before { content: ""; position: absolute; top: 6px; left: 0; }
+.nav__hamburger[aria-expanded="true"] span { transform: translateY(3px) rotate(45deg); }
+.nav__hamburger[aria-expanded="true"] span::before { transform: translateY(-6px) rotate(-90deg); top: 6px; }
+
+.mobile-menu { position: fixed; inset: 0; z-index: 90; background: var(--bg); padding: calc(var(--nav-h) + 24px) 24px 24px; display: flex; flex-direction: column; gap: 4px; transform: translateY(-100%); transition: transform .5s var(--ease); visibility: hidden; }
+.mobile-menu.is-open { transform: none; visibility: visible; }
+.mobile-menu a { font: 700 clamp(2.2rem, 11vw, 3.4rem)/1.15 var(--font-display); letter-spacing: -.03em; color: var(--hue); display: flex; align-items: baseline; gap: 10px; padding: 6px 0; }
+.mobile-menu a sup { font: 500 .8rem var(--font-mono); color: var(--ink-muted); }
+.mobile-menu .status-pill { align-self: flex-start; margin-top: 16px; }
+
+/* ==========================================================================
+   5. HERO ("stage")
+   ========================================================================== */
+.stage { position: relative; min-height: 100svh; padding: calc(var(--nav-h) + 40px) 0 var(--space-7); display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+.stage::before { content: ""; position: absolute; inset: 0; background:
+  radial-gradient(60% 50% at 80% 10%, color-mix(in oklab, var(--colour-quasar) 16%, transparent), transparent 70%),
+  radial-gradient(50% 45% at 10% 90%, color-mix(in oklab, var(--colour-pulsar) 12%, transparent), transparent 70%); pointer-events: none; }
+.stage__grid { position: absolute; inset: 0; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%); opacity: .35; pointer-events: none; }
+.stage__inner { position: relative; display: grid; gap: var(--space-5); }
+.stage__meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; font: 500 .8rem var(--font-mono); color: var(--ink-muted); }
+.stage__meta .dot { color: var(--colour-corona); }
+.stage__eyebrow { display: inline-flex; gap: 10px; align-items: center; font: 500 .85rem var(--font-mono); color: var(--colour-pulsar); }
+.stage__eyebrow::before { content: "›"; }
+.stage__object { position: relative; display: block; width: fit-content; font: 800 calc(clamp(4.2rem, 17vw, 15rem) * var(--hero-scale))/.86 var(--font-display); letter-spacing: var(--hero-track); padding: 24px 24px 24px 24px; transition: font-size .35s var(--ease), letter-spacing .35s var(--ease); }
+.stage__object .line { display: block; white-space: nowrap; }
+.stage__object .l { display: inline-block; color: var(--c, var(--ink)); opacity: var(--hero-alpha); cursor: default; animation: rise .9s var(--spring) calc(var(--n) * 70ms + .7s) both; transition: color .35s, transform .35s var(--spring); }
+.stage__object .l:hover { transform: translateY(-.06em) rotate(-3deg); }
+@keyframes rise { from { transform: translateY(.25em) scaleY(.6); opacity: 0; } to { transform: none; opacity: var(--hero-alpha); } }
+.stage__roles { font: 500 clamp(1rem, 2vw, 1.4rem)/1.3 var(--font-mono); color: var(--ink-muted); }
+.stage__roles b { color: var(--ink); font-weight: 500; }
+.stage__roles .bar { color: var(--colour-corona); padding: 0 .4em; }
+.stage__lede { max-width: 34ch; font-family: var(--font-display); font-weight: 600; font-size: clamp(1.4rem, 2.6vw, 2.1rem); line-height: 1.15; letter-spacing: -.02em; }
+.stage__lede::before { content: "> "; color: var(--colour-pulsar); font-family: var(--font-mono); }
+.stage__cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: var(--radius-pill); font: 600 .95rem/1 var(--font-body); border: 1.5px solid var(--ink); overflow: hidden; isolation: isolate; transition: color .3s, transform .3s var(--spring); }
+.btn::before { content: ""; position: absolute; inset: 0; background: var(--btn-hue, var(--colour-quasar)); transform: translateY(101%); transition: transform .4s var(--ease); z-index: -1; }
+.btn:hover { color: #121213; border-color: var(--btn-hue, var(--colour-quasar)); transform: translateY(-2px); }
+.btn:hover::before { transform: none; }
+.btn--solid { background: var(--ink); color: var(--bg); }
+.btn--solid::before { background: var(--colour-pulsar); }
+
+/* token toolbar */
+.stage__bar { position: relative; margin-top: var(--space-5); display: grid; gap: var(--space-4); max-width: 720px; }
+.stage__note { display: flex; align-items: center; gap: 8px; color: var(--ink-muted); }
+.stage__note svg { width: 34px; height: 34px; transform: rotate(-130deg); color: var(--colour-corona); flex: none; }
+.win { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.win-bar { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); font: 500 .75rem var(--font-mono); color: var(--ink-muted); }
+.win-dots { display: flex; gap: 6px; }
+.win-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--colour-flare); }
+.win-dots span:nth-child(2) { background: var(--colour-solstice); }
+.win-dots span:nth-child(3) { background: var(--colour-tidal); }
+.win pre { margin: 0; padding: 18px 20px; font: 400 .85rem/1.7 var(--font-mono); overflow-x: auto; white-space: pre-wrap; }
+.tok-k { color: var(--colour-quasar); } .tok-s { color: var(--colour-pulsar); } .tok-n { color: var(--colour-supernova); } .tok-c { color: #6c6c73; } .tok-f { color: var(--colour-nebula-light); } .tok-p { color: var(--colour-corona); }
+.stage__panel { padding: 0 20px 18px; display: none; align-items: center; gap: 12px; flex-wrap: wrap; }
+.stage__panel.is-on { display: flex; }
+.stage__panel input[type=range] { flex: 1; min-width: 160px; accent-color: var(--tool-hue, var(--colour-pulsar)); }
+.swatch { width: 28px; height: 28px; border-radius: 50%; background: var(--sw); border: 2px solid transparent; transition: transform .25s var(--spring), border-color .2s; }
+.swatch:hover { transform: scale(1.2); border-color: var(--ink); }
+.stage__toolbar { display: flex; flex-wrap: wrap; gap: 10px; }
+.stage__tool { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px 10px 12px; border-radius: var(--radius-pill); background: var(--surface); border: 1px solid var(--line); font: 500 .75rem/1 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; transition: background .25s, color .25s, transform .3s var(--spring), border-color .25s; }
+.stage__tool .key { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; background: var(--tool-hue); color: #121213; font-size: .7rem; }
+.stage__tool:hover { transform: translateY(-3px); border-color: var(--tool-hue); }
+.stage__tool[aria-pressed="true"] { background: var(--tool-hue); color: #121213; border-color: var(--tool-hue); }
+.stage__tool[aria-pressed="true"] .key { background: #121213; color: var(--tool-hue); }
+.stage__scroll { position: absolute; right: 24px; bottom: 28px; writing-mode: vertical-rl; font: 500 .7rem var(--font-mono); letter-spacing: .2em; text-transform: uppercase; color: var(--ink-muted); display: flex; align-items: center; gap: 12px; }
+.stage__scroll::after { content: ""; width: 1px; height: 56px; background: linear-gradient(var(--ink), transparent); animation: drip 2s var(--ease) infinite; transform-origin: top; }
+@keyframes drip { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+
+/* portals (rolling-word section links) */
+.portals { position: relative; padding: var(--space-6) 0 var(--space-8); }
+.portals__row { display: flex; flex-wrap: wrap; gap: 18px 14px; align-items: flex-end; }
+.portal-slot { display: inline-flex; flex-direction: column; gap: 4px; }
+.portal__note { color: var(--portal-hue); padding-left: 14px; opacity: 0; transform: translateY(6px); transition: opacity .3s, transform .3s var(--ease); }
+.portal-slot:hover .portal__note, .portal-slot:focus-within .portal__note { opacity: 1; transform: none; }
+.portal { position: relative; display: inline-flex; padding: 14px 30px; border-radius: var(--radius-pill); border: 1.5px solid var(--portal-hue); overflow: hidden; isolation: isolate; font: 700 clamp(1.4rem, 3.4vw, 2.6rem)/1 var(--font-display); letter-spacing: -.03em; color: var(--portal-hue); transition: color .3s, transform .35s var(--spring); }
+.portal__fill { position: absolute; inset: 0; background: var(--portal-hue); transform: translateY(101%); transition: transform .45s var(--ease); z-index: -1; }
+.portal__roll { display: block; height: 1.05em; overflow: hidden; }
+.portal__word { display: block; height: 1.05em; line-height: 1.05; transition: transform .45s var(--ease); }
+.portal:hover { color: #121213; transform: translateY(-4px) rotate(-1.5deg); }
+.portal:hover .portal__fill { transform: none; }
+.portal:hover .portal__word { transform: translateY(-100%); }
+
+/* ==========================================================================
+   6. SECTIONS
+   ========================================================================== */
+.section { position: relative; padding: var(--space-9) 0 var(--space-7); }
+.section__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-4) var(--space-6); margin-bottom: var(--space-7); }
+.section__title { color: var(--hue); }
+.section__title .slash { color: var(--ink); opacity: .35; }
+.section__sub { max-width: 44ch; color: var(--ink-muted); }
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); transition-delay: var(--d, 0s); }
+.reveal.is-in { opacity: 1; transform: none; }
+
+/* chips */
+.chip-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; padding: 8px 12px; border-radius: var(--radius-pill); border: 1px solid var(--chip-border, var(--line)); color: var(--chip-ink, var(--ink)); background: var(--chip-fill, transparent); transition: transform .3s var(--spring), background .25s; }
+.chip:hover { transform: translateY(-2px) rotate(-1.5deg); }
+
+/* project / work cards */
+.cards { display: grid; gap: var(--space-5); grid-template-columns: repeat(3, 1fr); }
+.cards--work { grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+.cards--work > div { display: flex; }
+.cards--work .pr-card { flex: 1; }
+.pr-card { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-6); min-height: 460px; padding: var(--space-5); border-radius: var(--radius); background: var(--card-bg); color: var(--card-ink-deep); overflow: hidden; isolation: isolate; transition: transform .5s var(--spring), border-radius .3s; text-align: left; width: 100%; }
+.pr-card:hover { transform: translateY(-8px) rotate(-.6deg); }
+.pr-card__art { position: absolute; inset: auto -10% -18% auto; width: 78%; aspect-ratio: 1; z-index: -1; opacity: .9; transition: transform .7s var(--ease); }
+.pr-card:hover .pr-card__art { transform: rotate(-8deg) scale(1.08); }
+.pr-card__index { font: 600 .8rem var(--font-mono); opacity: .7; }
+.pr-card__meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.pr-card__status { display: inline-flex; align-items: center; gap: 8px; font: 500 .8rem var(--font-mono); }
+.pr-card__status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.pr-card__body { display: grid; gap: 12px; }
+.pr-card__badge { display: inline-block; width: fit-content; padding: 6px 10px; border-radius: var(--radius-pill); background: var(--card-ink-deep); color: var(--card-bg); font: 600 .68rem var(--font-mono); letter-spacing: .05em; text-transform: uppercase; }
+.pr-card__name { font-size: clamp(2rem, 3.4vw, 2.8rem); }
+.pr-card__problem { font-weight: 600; }
+.pr-card__more { display: flex; align-items: center; justify-content: space-between; font: 500 .8rem var(--font-mono); border-top: 1.5px solid color-mix(in oklab, var(--card-ink-deep) 35%, transparent); padding-top: 14px; margin-top: 4px; }
+.pr-card__arrow { width: 40px; height: 40px; border-radius: 50%; background: var(--card-ink-deep); color: var(--card-bg); display: grid; place-items: center; font-size: 1.1rem; transition: transform .4s var(--spring); }
+.pr-card:hover .pr-card__arrow { transform: rotate(45deg) scale(1.1); }
+.pr-card .chip { --chip-ink: var(--card-ink-deep); --chip-border: var(--card-ink-deep); }
+
+/* work cards: actions row */
+.pr-card__actions { display: flex; flex-wrap: wrap; gap: 8px; border-top: 1.5px solid color-mix(in oklab, var(--card-ink-deep) 35%, transparent); padding-top: 16px; margin-top: 4px; }
+.act { display: inline-flex; align-items: center; gap: 8px; padding: 11px 16px; border-radius: var(--radius-pill); border: 1.5px solid var(--card-ink-deep); color: var(--card-ink-deep); font: 600 .78rem/1 var(--font-mono); letter-spacing: .02em; transition: background .25s, color .25s, transform .35s var(--spring); }
+.act span { transition: transform .35s var(--spring); display: inline-block; }
+.act:hover { background: var(--card-ink-deep); color: var(--card-bg); transform: translateY(-3px) rotate(-1.5deg); }
+.act:hover span { transform: translate(2px, -2px) rotate(15deg); }
+.act--main { background: var(--card-ink-deep); color: var(--card-bg); flex: 1 1 100%; justify-content: space-between; padding: 14px 18px; font-size: .85rem; }
+.act--main:hover { background: transparent; color: var(--card-ink-deep); }
+
+/* 3D mobile mockup modal */
+.mockup { width: min(960px, 100% - 24px); max-height: calc(100svh - 24px); padding: 0; border: 1px solid var(--line); border-radius: calc(var(--radius) * 1.4); background: var(--surface); color: var(--ink); overflow: hidden; margin: auto; }
+.mockup::backdrop { background: rgba(8, 8, 9, .82); backdrop-filter: blur(8px); }
+.mockup[open] { animation: pop .5s var(--ease); }
+.mockup__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); font: 500 .8rem var(--font-mono); }
+.mockup__bar b { color: var(--mk-hue); font-weight: 500; }
+.mockup__x { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); transition: background .2s, color .2s, transform .3s var(--spring); }
+.mockup__x:hover { background: var(--mk-hue); color: #121213; transform: rotate(90deg); }
+.mockup__stage { position: relative; height: min(640px, 62svh); display: grid; place-items: center; perspective: 1400px; cursor: grab; touch-action: none; user-select: none; overflow: hidden;
+  background: radial-gradient(50% 55% at 50% 50%, color-mix(in oklab, var(--mk-hue) 30%, transparent), transparent 70%), linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 100% 48px, var(--bg); }
+.mockup__stage.is-drag { cursor: grabbing; }
+.phone { --w: 250px; --h: 510px; position: relative; width: var(--w); height: var(--h); transform-style: preserve-3d; will-change: transform; }
+.phone__layer { position: absolute; inset: 0; border-radius: 42px; background: color-mix(in oklab, var(--mk-hue) 28%, #232326); }
+.phone__front, .phone__back { position: absolute; inset: 0; border-radius: 42px; backface-visibility: hidden; overflow: hidden; }
+.phone__front { background: #0a0a0b; padding: 9px; transform: translateZ(9px); box-shadow: inset 0 0 0 2px #2e2e32; }
+.phone__screen { position: relative; width: 100%; height: 100%; border-radius: 34px; overflow: hidden; background: var(--surface-2); }
+.phone__screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.phone__empty { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 28px; font: 500 .75rem/1.6 var(--font-mono); color: color-mix(in oklab, var(--mk-hue) 60%, #fff); background: repeating-linear-gradient(135deg, #1f1f22 0 14px, #262629 14px 28px); }
+.phone__empty code { display: block; margin-top: 8px; color: var(--ink); }
+.phone__screen.has-img .phone__empty { display: none; }
+.phone__island { position: absolute; top: 18px; left: 50%; width: 76px; height: 22px; margin-left: -38px; border-radius: 12px; background: #000; z-index: 2; }
+.phone__glare { position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.16) 45%, transparent 60%); background-size: 250% 100%; background-position: var(--gx, 50%) 0; }
+.phone__back { transform: translateZ(-9px) rotateY(180deg); background: linear-gradient(160deg, var(--mk-hue), color-mix(in oklab, var(--mk-hue) 45%, #000)); }
+.phone__cam { position: absolute; top: 18px; left: 18px; width: 82px; height: 82px; border-radius: 24px; background: rgba(0,0,0,.28); display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; }
+.phone__cam i { border-radius: 50%; background: radial-gradient(circle at 35% 35%, #4a4a52, #060607 70%); box-shadow: 0 0 0 2px rgba(255,255,255,.12); }
+.phone__logo { position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); font: 800 1.4rem var(--font-display); letter-spacing: -.03em; color: rgba(0,0,0,.35); white-space: nowrap; }
+.phone__shadow { position: absolute; left: 50%; bottom: -46px; width: 220px; height: 26px; margin-left: -110px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.55), transparent); transform: translateZ(-60px) rotateX(90deg); }
+.mockup__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; border-top: 1px solid var(--line); }
+.mockup__views { display: flex; flex-wrap: wrap; gap: 8px; }
+.mockup__views button, .mockup__links a { padding: 9px 14px; border-radius: var(--radius-pill); border: 1px solid var(--line); font: 500 .75rem/1 var(--font-mono); transition: background .2s, color .2s, border-color .2s, transform .3s var(--spring); }
+.mockup__views button:hover, .mockup__links a:hover { background: var(--mk-hue); color: #121213; border-color: var(--mk-hue); transform: translateY(-2px); }
+.mockup__views button[aria-pressed="true"] { border-color: var(--mk-hue); color: var(--mk-hue); }
+.mockup__links { display: flex; gap: 8px; }
+.mockup__hint { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); color: var(--mk-hue); pointer-events: none; transition: opacity .4s; white-space: nowrap; }
+.mockup__stage.is-drag .mockup__hint { opacity: 0; }
+
+/* lab */
+.lab { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-5); }
+.lab .win-bar b { color: var(--hue); font-weight: 500; }
+.lab__body { padding: 22px; display: grid; gap: 22px; }
+.lab__group h4 { margin: 0 0 12px; font: 500 .72rem var(--font-mono); color: var(--ink-muted); letter-spacing: .08em; text-transform: uppercase; }
+
+/* experience */
+.timeline { display: grid; gap: 0; }
+.exp { display: grid; grid-template-columns: 220px 1fr; gap: var(--space-6); padding: var(--space-6) 0; border-top: 1px solid var(--line); }
+.exp:last-child { border-bottom: 1px solid var(--line); }
+.exp__date { font: 500 .85rem var(--font-mono); color: var(--hue); padding-top: 6px; }
+.exp__role { font: 700 clamp(1.5rem, 2.8vw, 2.2rem)/1.1 var(--font-display); letter-spacing: -.025em; margin-bottom: 4px; }
+.exp__org { color: var(--ink-muted); font: 500 .85rem var(--font-mono); margin-bottom: 14px; }
+.exp p { max-width: 68ch; color: #cfcfd4; }
+.certs { margin-top: var(--space-8); }
+.certs h3 { margin-bottom: var(--space-5); }
+.certs h3 .slash { opacity: .35; }
+.cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-4); }
+.cert { position: relative; height: 270px; perspective: 1000px; transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg)); transition: transform .35s var(--ease); transform-style: preserve-3d; }
+.cert.is-tilting { transition: transform .08s linear; }
+.cert__inner { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .8s var(--spring); }
+.cert.is-flipped .cert__inner { transform: rotateY(180deg); }
+.cert__face { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 8px; padding: 22px; border-radius: var(--radius); backface-visibility: hidden; overflow: hidden; isolation: isolate; }
+.cert__front { background: var(--surface); border: 1px solid var(--line); transition: border-color .3s; }
+.cert:hover .cert__front { border-color: var(--hue); }
+.cert__front::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), color-mix(in oklab, var(--hue) 38%, transparent), transparent 70%); opacity: 0; transition: opacity .3s; }
+.cert:hover .cert__front::before { opacity: 1; }
+.cert__no { font: 800 clamp(3.6rem, 7vw, 5rem)/.9 var(--font-display); letter-spacing: -.05em; color: var(--hue); transition: transform .5s var(--spring); transform-origin: left bottom; }
+.cert:hover .cert__no { transform: scale(1.08) rotate(-3deg); }
+.cert__front b, .cert__back b { font: 700 1.3rem/1.15 var(--font-display); letter-spacing: -.02em; margin-top: auto; }
+.cert__org { color: var(--ink-muted); font: 400 .85rem var(--font-mono); }
+.cert__meta { align-self: flex-start; padding: 6px 10px; border-radius: var(--radius-pill); border: 1px solid var(--hue); color: var(--hue); font: 500 .7rem var(--font-mono); letter-spacing: .05em; text-transform: uppercase; }
+.cert__back { transform: rotateY(180deg); background: var(--hue); color: color-mix(in oklab, var(--hue) 20%, #000); }
+.cert__back b { margin-top: 0; padding-right: 40px; }
+.cert__back p { font-size: .9rem; line-height: 1.5; }
+.cert__link { margin-top: auto; align-self: flex-start; padding: 10px 14px; border-radius: var(--radius-pill); background: color-mix(in oklab, var(--hue) 20%, #000); color: var(--hue); font: 600 .78rem/1 var(--font-mono); transition: transform .35s var(--spring); }
+.cert__link:hover { transform: translateY(-3px) rotate(-1.5deg); }
+.cert__flip { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid currentColor; display: grid; place-items: center; font-size: 1rem; color: var(--hue); transition: transform .5s var(--spring), background .2s, color .2s; }
+.cert__back .cert__flip { color: inherit; }
+.cert__flip:hover { transform: rotate(180deg); background: var(--hue); color: #121213; }
+.cert__back .cert__flip:hover { background: color-mix(in oklab, var(--hue) 20%, #000); color: var(--hue); }
+
+/* about */
+.about { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--space-6); align-items: start; }
+.about .win pre { font-size: clamp(.78rem, 1.2vw, .92rem); }
+.about__facts { display: grid; gap: var(--space-4); }
+.fact { padding: 22px; border-radius: var(--radius); background: var(--fact-bg); color: var(--fact-ink); transition: transform .4s var(--spring); }
+.fact:hover { transform: translateY(-5px) rotate(.8deg); }
+.fact small { display: block; font: 500 .72rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; opacity: .7; margin-bottom: 6px; }
+.fact b { font: 700 1.5rem/1.15 var(--font-display); letter-spacing: -.02em; }
+
+/* contact */
+.contact { text-align: left; }
+.contact__big { font: 800 clamp(3rem, 10vw, 9rem)/.92 var(--font-display); letter-spacing: -.05em; margin: 0 0 var(--space-6); }
+.contact__big span { display: block; }
+.contact__big .hi { color: var(--colour-corona); transition: color .5s; }
+.contact__big:hover .hi { color: var(--colour-pulsar); }
+.contact__lede { max-width: 52ch; color: var(--ink-muted); margin-bottom: var(--space-5); }
+.contact__mail { display: inline-block; font: 600 clamp(1.3rem, 3.6vw, 2.6rem)/1.2 var(--font-display); letter-spacing: -.03em; border-bottom: 3px solid var(--colour-quasar); padding-bottom: 4px; transition: color .3s, border-color .3s; word-break: break-all; }
+.contact__mail:hover { color: var(--colour-quasar); border-color: var(--colour-corona); }
+.contact__row { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: var(--space-5) 0; font: 500 .9rem var(--font-mono); color: var(--ink-muted); }
+.contact__find { margin-top: var(--space-6); display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.contact__find .type-annotation { color: var(--colour-corona); margin-right: 8px; }
+
+/* footer */
+.footer { margin-top: var(--space-8); padding: var(--space-6) 0 var(--space-7); border-top: 1px solid var(--line); }
+.footer__in { display: flex; flex-wrap: wrap; gap: 20px 40px; align-items: center; justify-content: space-between; color: var(--ink-muted); font: 400 .85rem var(--font-mono); }
+.footer__logo { color: var(--ink); font-weight: 600; }
+.footer__logo .t { color: var(--colour-quasar); }
+.footer q { font: 600 clamp(1rem, 2vw, 1.3rem)/1.3 var(--font-display); color: var(--ink); max-width: 42ch; quotes: none; }
+.footer a:hover { color: var(--colour-pulsar); }
+
+/* ==========================================================================
+   7. RESPONSIVE + REDUCED MOTION
+   ========================================================================== */
+@media (max-width: 1100px) { .cards { grid-template-columns: 1fr 1fr; } .nav__links { gap: 16px; } .nav .status-pill { display: none; } }
+@media (max-width: 900px) {
+  .nav__right { display: none; } .nav__hamburger { display: grid; }
+  .lab, .about, .case.is-open { grid-template-columns: 1fr; }
+  .exp { grid-template-columns: 1fr; gap: 8px; }
+  .project { grid-template-columns: 1fr; gap: 12px; } .project__side { justify-items: start; }
+  .stage__scroll { display: none; }
+}
+@media (max-width: 640px) { .cards { grid-template-columns: 1fr; } .section { padding-top: var(--space-8); } .pr-card { min-height: 400px; } .wrap, .nav { width: calc(100% - 32px); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0s !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  .reveal { opacity: 1; transform: none; }
+}
+</style>
+</head>
+
+<body class="is-loading">
+<a href="#main" class="skip-link">Skip to content</a>
+<div class="curtain" aria-hidden="true"><span class="curtain__layer curtain__layer--dark"></span><span class="curtain__layer curtain__layer--base"></span><span class="curtain__layer curtain__layer--light"></span></div>
+
+<!-- ============================ HEADER ============================ -->
+<header class="nav-wrapper" id="top">
+  <nav class="nav" aria-label="Primary navigation">
+    <a class="nav__logo" href="#top" aria-label="Abrar Ayman, home"><span class="t">&lt;</span><span class="n">AbrarAyman</span><span class="t">/&gt;</span></a>
+    <div class="nav__right">
+      <ul class="nav__links" role="list" id="navLinks">
+        <!-- EDIT: add / remove sections here. data-target = section id, hue = colour token -->
+        <li><a class="nav__link" href="#work " data-target="work" style="--count-colour:var(--colour-quasar);--link-hover-colour:var(--colour-quasar)">Work<span class="slash">/ &gt;</span><sup class="nav__count" aria-hidden="true"></sup></a></li>
+        <li><a class="nav__link" href="#lab " data-target="lab" style="--count-colour:var(--colour-pulsar);--link-hover-colour:var(--colour-pulsar)">Lab<span class="slash">/ &gt;</span></a></li>
+        <li><a class="nav__link" href="#experience " data-target="experience" style="--count-colour:var(--colour-supernova);--link-hover-colour:var(--colour-supernova)">Exp<span class="slash">/ &gt;</span></a></li>
+        <li><a class="nav__link" href="#about " data-target="about" style="--count-colour:var(--colour-nebula);--link-hover-colour:var(--colour-nebula)">About<span class="slash">/ &gt;</span></a></li>
+        <li><a class="nav__link" href="#contact " data-target="contact" style="--count-colour:var(--colour-solstice);--link-hover-colour:var(--colour-solstice)">Contact<span class="slash">/ &gt;</span></a></li>
+      </ul>
+      <span class="nav__divider" aria-hidden="true"></span>
+      <span class="status-pill"><i></i>open to work</span>
+    </div>
+    <button class="nav__hamburger" id="burger" aria-label="Open navigation" aria-expanded="false" aria-controls="mobileMenu"><span></span></button>
+  </nav>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+  <a href="#work" style="--hue:var(--colour-quasar)">Work <sup>/&gt;</sup></a>
+  <a href="#lab" style="--hue:var(--colour-pulsar)">Lab <sup>/&gt;</sup></a>
+  <a href="#experience" style="--hue:var(--colour-supernova)">Exp <sup>/&gt;</sup></a>
+  <a href="#about" style="--hue:var(--colour-nebula)">About <sup>/&gt;</sup></a>
+  <a href="#contact" style="--hue:var(--colour-solstice)">Contact <sup>/&gt;</sup></a>
+  <span class="status-pill"><i></i>open to work</span>
+</div>
+
+<main id="main" tabindex="-1">
+
+<!-- ============================ HERO ============================ -->
+<section class="stage" aria-label="Introduction">
+  <div class="stage__grid" aria-hidden="true"></div>
+  <div class="wrap stage__inner">
+    
+
+    <h1 class="stage__object" id="heroName" aria-label="Abrar Ayman">
+      <span class="line" data-split>Abrar</span>
+      <span class="line" data-split>Ayman</span>
+    </h1>
+
+    <p class="stage__roles"><b>Product Designer</b><span class="bar">|</span><b>Flutter Developer</b></p>
+    <p class="stage__lede">Designing Meaningful Digital Experiences</p>
+    
+    <div class="stage__cta">
+      <a class="btn btn--solid" href="#work">Explore my work <span aria-hidden="true">↓</span></a>
+      <a class="btn" href="#contact" style="--btn-hue:var(--colour-corona)">Let's connect <span aria-hidden="true">↗</span></a>
+    </div>
+
+    <!-- design-token playground (hover the letters / press 1–5) -->
+    <div class="stage__bar">
+      <figure class="win" style="margin:0">
+        <figcaption class="win-bar"><span class="win-dots" aria-hidden="true"><span></span><span></span><span></span></span><span>tokens.css</span></figcaption>
+        <pre aria-live="polite"><code id="tokenCode"></code></pre>
+        <div class="stage__panel" id="tokenPanel"></div>
+      </figure>
+      <div class="stage__toolbar" role="toolbar" aria-label="Design tokens" id="toolbar">
+        <button type="button" class="stage__tool" data-tool="colour"  aria-pressed="false" aria-keyshortcuts="1" style="--tool-hue:var(--colour-pulsar)"><span class="key">1</span>Colour</button>
+        <button type="button" class="stage__tool" data-tool="type"    aria-pressed="false" aria-keyshortcuts="2" style="--tool-hue:var(--colour-quasar)"><span class="key">2</span>Type</button>
+        <button type="button" class="stage__tool" data-tool="spacing" aria-pressed="false" aria-keyshortcuts="3" style="--tool-hue:var(--colour-flare)"><span class="key">3</span>Spacing</button>
+        <button type="button" class="stage__tool" data-tool="radius"  aria-pressed="false" aria-keyshortcuts="4" style="--tool-hue:var(--colour-solstice)"><span class="key">4</span>Radius</button>
+        <button type="button" class="stage__tool" data-tool="opacity" aria-pressed="false" aria-keyshortcuts="5" style="--tool-hue:var(--colour-nebula)"><span class="key">5</span>Opacity</button>
+      </div>
+      
+    </div>
+  </div>
+  <span class="stage__scroll">keep exploring</span>
+</section>
+
+<!-- section links with rolling words -->
+<section class="portals" aria-label="Sections">
+  <div class="wrap portals__row">
+    <span class="portal-slot" style="--portal-hue:var(--colour-quasar)"><span class="portal__note type-annotation" aria-hidden="true">case studies &amp; projects</span><a class="portal" href="#work"><span class="portal__fill"></span><span class="portal__roll"><span class="portal__word">work</span><span class="portal__word" aria-hidden="true">work</span></span></a></span>
+    <span class="portal-slot" style="--portal-hue:var(--colour-pulsar)"><span class="portal__note type-annotation" aria-hidden="true">tools &amp; stack</span><a class="portal" href="#lab"><span class="portal__fill"></span><span class="portal__roll"><span class="portal__word">lab</span><span class="portal__word" aria-hidden="true">lab</span></span></a></span>
+    <span class="portal-slot" style="--portal-hue:var(--colour-supernova)"><span class="portal__note type-annotation" aria-hidden="true">where I've been</span><a class="portal" href="#experience"><span class="portal__fill"></span><span class="portal__roll"><span class="portal__word">experience</span><span class="portal__word" aria-hidden="true">experience</span></span></a></span>
+    <span class="portal-slot" style="--portal-hue:var(--colour-nebula)"><span class="portal__note type-annotation" aria-hidden="true">who &amp; how</span><a class="portal" href="#about"><span class="portal__fill"></span><span class="portal__roll"><span class="portal__word">about</span><span class="portal__word" aria-hidden="true">about</span></span></a></span>
+  </div>
+</section>
+
+<!-- ============================ WORK (case studies + projects, combined) ============================ -->
+<section class="section" id="work" style="--hue:var(--colour-quasar)">
+  <div class="wrap">
+    <div class="section__head reveal">
+      <h2 class="type-h2 section__title">Work <span class="slash">/&gt;</span></h2>
+      <p class="section__sub type-p-lg">A collection of ideas shaped by research, refined through design, and brought to life through thoughtful digital experiences.</p>
+    </div>
+
+    <div class="cards cards--work" id="workCards">
+      <!-- EDIT: each card = one project. Replace: case-study link, data-screen (your mockup screenshot), Behance link -->
+      
+      <div class="reveal" style="--d:0.08s" data-item>
+        <article class="pr-card" style="--card-bg:var(--colour-quasar);--card-ink-deep:var(--colour-quasar-deep)">
+          <span class="pr-card__art" aria-hidden="true"><svg viewBox="0 0 200 200"><path d="M10 150 C60 40 140 40 190 150" fill="none" stroke="var(--colour-quasar-dark)" stroke-width="22" stroke-linecap="round"/><circle cx="10" cy="150" r="16" fill="var(--colour-quasar-deep)"/><circle cx="190" cy="150" r="16" fill="var(--colour-quasar-light)"/></svg></span>
+          <div class="pr-card__meta"><span class="pr-card__index">00</span><span class="pr-card__status">Event Discovery · Planning & Ticketing</span></div>
+          <div class="pr-card__body">
+            <h3 class="pr-card__name type-h3">Gahez ?</h3>
+            <p class="pr-card__problem type-p-sm"><b>Problem: </b> Finding events is only half the challenge.
+        Comparing options, aligning group preferences, and turning
+        ideas into actual plans can feel fragmented.</p>
+            <p class="type-p-sm">An event discovery and planning platform that helps people
+        explore experiences, coordinate with friends, build personalized
+        plans, and book tickets in one seamless journey.</p>
+             <ul class="chip-list">
+        <li class="chip type-label">Product Design</li>
+        <li class="chip type-label">UX Research</li>
+        <li class="chip type-label">Mobile App</li>
+        <li class="chip type-label">Web Platform</li>
+      </ul>
+          </div>
+          <div class="pr-card__actions">
+            <!-- EDIT: replace the three links below for U Move -->
+            <a class="act act--main" href="https://YOUR-CASE-STUDY-WEBSITE.com/u-move" target="_blank" rel="noreferrer">View case study <span aria-hidden="true">↗</span></a>
+            <button class="act" type="button" data-mockup data-title="Gahez?" data-hue="quasar" data-screen="gahez.svg" data-case="https://YOUR-CASE-STUDY-WEBSITE.com/u-move" data-behance="https://www.behance.net/abrarayman2">  Preview mockup <span aria-hidden="true">◐</span></button>
+            <a class="act" href="https://www.behance.net/abrarayman2" target="_blank" rel="noreferrer">Behance <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+      </div>
+      
+      <div class="reveal" data-item>
+        <article class="pr-card" style="--card-bg:var(--colour-nebula);--card-ink-deep:var(--colour-nebula-deep)">
+          <span class="pr-card__art" aria-hidden="true"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" fill="var(--colour-nebula-light)"/><circle cx="100" cy="100" r="58" fill="var(--colour-nebula-dark)"/><circle cx="100" cy="100" r="26" fill="var(--colour-nebula-deep)"/></svg></span>
+          <div class="pr-card__meta"><span class="pr-card__index">01</span><span class="pr-card__status">Mental Health App · UI/UX · AI</span></div>
+          <div class="pr-card__body">
+            <span class="pr-card__badge">★ Best Graduation Project — AlexU</span>
+            <h3 class="pr-card__name type-h3">Soul Support</h3>
+            <p class="pr-card__problem type-p-sm"><b>Problem:</b> Many users lacked access to affordable mental health support and struggled to find personalized, consistent care.</p>
+            <p class="type-p-sm">Designed an AI-powered mental health app that delivers personalized therapy plans, mood tracking, and supportive interactions — focusing on emotional comfort and usability.</p>
+            <ul class="chip-list"><li class="chip type-label">Mobile App</li><li class="chip type-label">UI/UX</li><li class="chip type-label">Flutter</li></li><li class="chip type-label">AI</li></ul>
+          </div>
+          <div class="pr-card__actions">
+            <!-- EDIT: replace the three links below for Soul Support -->
+           <a
+  class="act act--main"
+  href="https://abrarayman27.github.io/soulsupport-ux-case-study/"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  View case study <span aria-hidden="true">↗</span>
+</a>
+            <button class="act" type="button" data-mockup data-title="Soul Support" data-hue="nebula" data-screen="soul.png" data-case="https://abrarayman27.github.io/soulsupport-ux-case-study/" data-behance="https://www.behance.net/abrarayman2">3D mockup <span aria-hidden="true">◐</span></button>
+            <a class="act" href="https://www.behance.net/abrarayman2" target="_blank" rel="noreferrer">Behance <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+      </div>
+      <div class="reveal" style="--d:0.16s" data-item>
+        <article class="pr-card" style="--card-bg:var(--colour-tidal);--card-ink-deep:var(--colour-tidal-deep)">
+          <span class="pr-card__art" aria-hidden="true"><svg viewBox="0 0 200 200"><path d="M100 10c40 30 70 60 70 100a70 70 0 0 1-140 0c0-40 30-70 70-100z" fill="var(--colour-tidal-light)"/><path d="M100 60c22 18 38 36 38 58a38 38 0 0 1-76 0c0-22 16-40 38-58z" fill="var(--colour-tidal-dark)"/></svg></span>
+          <div class="pr-card__meta"><span class="pr-card__index">02</span><span class="pr-card__status">Mobile App · Branding · Well-being</span></div>
+          <div class="pr-card__body">
+            <h3 class="pr-card__name type-h3">Nabta</h3>
+            <p class="pr-card__problem type-p-sm"><b>Problem: </b>Choosing the right plant is only the beginning.
+    Beginner plant owners often struggle to find reliable care
+    guidance, maintain routines, and identify plant health issues.</p>
+            <p class="type-p-sm"> An end-to-end plant ownership experience that connects
+    personalized plant discovery, transparent purchasing,
+    ongoing care, and AI-assisted plant health guidance
+    through a cohesive mobile experience.</p>
+            <ul class="chip-list">
+    <li class="chip type-label">Mobile App</li>
+    <li class="chip type-label">Product Design</li>
+    <li class="chip type-label">UX Research</li>
+    <li class="chip type-label">UI Design</li>
+  </ul>
+          </div>
+          <div class="pr-card__actions">
+            <!-- EDIT: replace the three links below for Silent Me -->
+            <a class="act act--main" href="https://abrarayman27.github.io/Nabta/" target="_blank" rel="noreferrer">View case study <span aria-hidden="true">↗</span></a>
+            <button class="act" type="button" data-mockup data-title="Nabta" data-hue="tidal" data-screen="nabta.svg" data-case="https://abrarayman27.github.io/Nabta/" data-behance="https://www.behance.net/gallery/257241891/Nabta-Mobile-App-UXUI-Design-Case-Study">3D mockup <span aria-hidden="true">◐</span></button>
+            <a class="act" href="https://www.behance.net/gallery/257241891/Nabta-Mobile-App-UXUI-Design-Case-Study" target="_blank" rel="noreferrer">Behance <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ LAB ============================ -->
+<section class="section" id="lab" style="--hue:var(--colour-pulsar)">
+  <div class="wrap">
+    <div class="section__head reveal">
+      <h2 class="type-h2 section__title">Lab <span class="slash">/&gt;</span></h2>
+      <p class="section__sub type-p-lg">Tools, technologies, and skills behind the experiences I design and build.</p>
+    </div>
+    <div class="lab">
+      <figure class="win reveal" style="margin:0;--hue:var(--colour-quasar)">
+        <figcaption class="win-bar"><span class="win-dots" aria-hidden="true"><span></span><span></span><span></span></span><span>designer<b>.fig</b></span><span style="margin-left:auto">UI/UX</span></figcaption>
+        <div class="lab__body"><ul class="chip-list">
+          <li class="chip type-label" style="--chip-border:var(--colour-quasar)">Figma</li><li class="chip type-label" style="--chip-border:var(--colour-quasar)">Adobe XD</li><li class="chip type-label" style="--chip-border:var(--colour-quasar)">Wireframing &amp; Prototyping</li><li class="chip type-label" style="--chip-border:var(--colour-quasar)">User Flows</li><li class="chip type-label" style="--chip-border:var(--colour-quasar)">Usability Testing</li><li class="chip type-label" style="--chip-border:var(--colour-quasar)">User Research</li><li class="chip type-label" style="--chip-border:var(--colour-quasar)">Design Systems</li><li class="chip type-label" style="--chip-border:var(--colour-quasar)">Emotional Design</li><li class="chip type-label" style="--chip-border:var(--colour-quasar)">Accessibility (WCAG)</li>
+        </ul></div>
+      </figure>
+      <figure class="win reveal" style="margin:0;--d:.1s;--hue:var(--colour-pulsar)">
+        <figcaption class="win-bar"><span class="win-dots" aria-hidden="true"><span></span><span></span><span></span></span><span>developer<b>.json</b></span><span style="margin-left:auto">Code</span></figcaption>
+        <div class="lab__body"><ul class="chip-list">
+          <li class="chip type-label" style="--chip-border:var(--colour-pulsar)">Flutter &amp; Dart</li><li class="chip type-label" style="--chip-border:var(--colour-pulsar)">Firebase</li><li class="chip type-label" style="--chip-border:var(--colour-pulsar)">HTML / CSS / JavaScript</li><li class="chip type-label" style="--chip-border:var(--colour-pulsar)">Git &amp; GitHub</li><li class="chip type-label" style="--chip-border:var(--colour-pulsar)">Python</li><li class="chip type-label" style="--chip-border:var(--colour-pulsar)">scikit-learn (ML basics)</li><li class="chip type-label" style="--chip-border:var(--colour-pulsar)">Responsive Design</li><li class="chip type-label" style="--chip-border:var(--colour-pulsar)">Frontend Development</li>
+        </ul></div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ EXPERIENCE ============================ -->
+<section class="section" id="experience" style="--hue:var(--colour-supernova)">
+  <div class="wrap">
+    <div class="section__head reveal">
+      <h2 class="type-h2 section__title">Experience <span class="slash">/&gt;</span></h2>
+    </div>
+    <div class="timeline">
+      <article class="exp reveal" style="--hue:var(--colour-supernova)">
+        <div class="exp__date">July 2025 — Present</div>
+        <div><h3 class="exp__role">Coding Instructor</h3><p class="exp__org">iSchool · Cairo, Egypt (Remote)</p><p>Teach programming and development fundamentals through hands-on projects, helping students translate complex technical concepts into practical solutions. Guide learners through problem-solving, creative thinking, and project development across web and mobile technologies.
+
+</p></div>
+      </article>
+      <article class="exp reveal" style="--hue:var(--colour-corona)">
+        <div class="exp__date">2022 — Present </div>
+        <div><h3 class="exp__role">Independent UI/UX Designer</h3><p class="exp__org">Self-Employed · Remote &amp; Project-Based</p><p>Explore user-centered design through digital product projects, translating user needs into intuitive user flows, wireframes, prototypes, and polished interfaces. Apply UX research, interaction design, and iterative refinement to create cohesive mobile and web experiences.</p></div>
+      </article>
+      <article class="exp reveal" style="--hue:var(--colour-nebula)">
+        <div class="exp__date">2021 — 2025</div>
+        <div><h3 class="exp__role">B.Sc. in Computer Science  &amp; Software Engineering</h3><p class="exp__org">Alexandria University · Grade: Very Good · CGPA 3.0</p><p>Graduated with a degree in Computer Science and Software Engineering, building a foundation in software development, analytical problem-solving, and digital product creation.
+<p class="exp__project">
+    <strong>Graduation Project — SoulSupport</strong><br>
+    Awarded Best Graduation Project across Alexandria University,
+    with an Excellent project grade.
+  </p>
+</p></div>
+      </article>
+    </div>
+
+    <div class="certs">
+      <h3 class="type-h3 reveal">Certifications <span class="slash">/&gt;</span></h3>
+      <div class="cert-grid">
+        <div class="reveal" style="--hue:var(--colour-solstice)">
+        <article class="cert" style="--hue:var(--colour-solstice)">
+          <div class="cert__inner">
+            <div class="cert__face cert__front">
+              <button type="button" class="cert__flip" aria-label="Flip card: details for UX Master Certification" aria-pressed="false">↻</button>
+              <span class="cert__no" aria-hidden="true">01</span>
+              <b>UX Master Certification</b>
+              <span class="cert__org">Nielsen Norman Group</span>
+              <span class="cert__meta">90+ hrs · 2025</span>
+            </div>
+            <div class="cert__face cert__back" inert>
+              <button type="button" class="cert__flip" aria-label="Flip back: UX Master Certification" aria-pressed="true">↻</button>
+              <b>UX Master Certification</b>
+              <p>90+ hours of coursework and exams across the full UX practice. Replace with what you learned.</p>
+              <!-- EDIT: put your credential link -->
+              <a class="cert__link" href="https://YOUR-CREDENTIAL-LINK.com" target="_blank" rel="noreferrer">View credential ↗</a>
+            </div>
+          </div>
+        </article>
+        </div>
+        <div class="reveal" style="--hue:var(--colour-pulsar);--d:0.08s">
+        <article class="cert" style="--hue:var(--colour-pulsar)">
+          <div class="cert__inner">
+            <div class="cert__face cert__front">
+              <button type="button" class="cert__flip" aria-label="Flip card: details for UI/UX Diploma" aria-pressed="false">↻</button>
+              <span class="cert__no" aria-hidden="true">02</span>
+              <b>UI/UX Diploma</b>
+              <span class="cert__org">Route IT Training Center</span>
+              <span class="cert__meta">2026</span>
+            </div>
+            <div class="cert__face cert__back" inert>
+              <button type="button" class="cert__flip" aria-label="Flip back: UI/UX Diploma" aria-pressed="true">↻</button>
+              <b>UI/UX Diploma</b>
+              <p>Hands-on UI/UX training: research, wireframing, prototyping and design systems.</p>
+              <!-- EDIT: put your credential link -->
+              <a class="cert__link" href="https://YOUR-CREDENTIAL-LINK.com" target="_blank" rel="noreferrer">View credential ↗</a>
+            </div>
+          </div>
+        </article>
+        </div>
+        <div class="reveal" style="--hue:var(--colour-corona);--d:0.16s">
+        <article class="cert" style="--hue:var(--colour-corona)">
+          <div class="cert__inner">
+            <div class="cert__face cert__front">
+              <button type="button" class="cert__flip" aria-label="Flip card: details for Google UX Design" aria-pressed="false">↻</button>
+              <span class="cert__no" aria-hidden="true">03</span>
+              <b>Google UX Design</b>
+              <span class="cert__org">Coursera</span>
+              <span class="cert__meta">2024</span>
+            </div>
+            <div class="cert__face cert__back" inert>
+              <button type="button" class="cert__flip" aria-label="Flip back: Google UX Design" aria-pressed="true">↻</button>
+              <b>Google UX Design</b>
+              <p>The UX process from empathizing and defining to prototyping and testing.</p>
+              <!-- EDIT: put your credential link -->
+              <a class="cert__link" href="https://YOUR-CREDENTIAL-LINK.com" target="_blank" rel="noreferrer">View credential ↗</a>
+            </div>
+          </div>
+        </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ ABOUT ============================ -->
+<section class="section" id="about" style="--hue:var(--colour-nebula)">
+  <div class="wrap">
+    <div class="section__head reveal"><h2 class="type-h2 section__title">About <span class="slash">/&gt;</span></h2></div>
+    <div class="about">
+      <figure class="win reveal" style="margin:0">
+        <figcaption class="win-bar"><span class="win-dots" aria-hidden="true"><span></span><span></span><span></span></span><span>AbrarAyman.ts</span></figcaption>
+<pre><code><span class="tok-k">class</span> <span class="tok-f">AbrarAyman</span> {
+  <span class="tok-c">// I design for humans. I build for scale.</span>
+  <span class="tok-k">constructor</span>() {
+    <span class="tok-k">this</span>.name = <span class="tok-s">'Abrar Ayman'</span>
+    <span class="tok-k">this</span>.location = <span class="tok-s">'Alexandria, Egypt'</span>
+    <span class="tok-k">this</span>.email = <span class="tok-s">'abrarayman81@gmail.com'</span>
+    <span class="tok-k">this</span>.openToRelocate = <span class="tok-n">true</span>
+  }
+
+  <span class="tok-f">certifications</span>() {
+    <span class="tok-k">return</span> [
+      { <span class="tok-p">'2026'</span>: <span class="tok-s">'UI/UX Diploma — Route IT Training Center'</span> },
+      { <span class="tok-p">'2025'</span>: <span class="tok-s">'NN/g UX Master Certification — 90+ hrs'</span> },
+      { <span class="tok-p">'2024'</span>: <span class="tok-s">'Google UX Design — Coursera'</span> },
+    ]
+  }
+
+  <span class="tok-f">superpower</span>() {
+    <span class="tok-k">return</span> <span class="tok-s">'Bridging human-centered design and technology to create intuitive digital experiences'</span>
+  }
+}</code></pre>
+      </figure>
+      <div class="about__facts">
+        <div class="fact reveal" style="--fact-bg:var(--colour-quasar);--fact-ink:var(--colour-quasar-deep)"><small>Based in</small><b>Alexandria, Egypt</b></div>
+        <div class="fact reveal" style="--fact-bg:var(--colour-pulsar);--fact-ink:var(--colour-pulsar-deep);--d:.08s"><small>Recognition</small><b>Best Graduation Project — Alexandria University</b></div>
+        <div class="fact reveal" style="--fact-bg:var(--colour-corona);--fact-ink:var(--colour-corona-deep);--d:.16s"><small>Superpower</small><b>I design with empathy. I build with purpose.</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTACT ============================ -->
+<section class="section contact" id="contact" style="--hue:var(--colour-solstice)">
+  <div class="wrap">
+    <h2 class="contact__big reveal"><span>Let's build</span><span class="hi">something real</span></h2>
+    <p class="contact__lede type-p-lg reveal">Open to full-time roles, freelance projects, and collaborations in UI/UX design and Flutter development.</p>
+    <a class="contact__mail reveal" href="mailto:abrarayman81@gmail.com">abrarayman81@gmail.com</a>
+    <p class="contact__row reveal"><span>📍 Alexandria, Egypt — Ready to Relocate</span><span>·</span><a href="tel:+201287372168">+20 128 737 2168</a></p>
+    <div class="contact__find reveal">
+      <span class="type-annotation">Find me on</span>
+      <a class="btn" style="--btn-hue:var(--colour-nebula)" href="https://www.linkedin.com/in/abrar-ayman" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+      <a class="btn" style="--btn-hue:var(--colour-orbit)" href="https://www.behance.net/abrarayman2" target="_blank" rel="noreferrer">Behance ↗</a>
+      <a class="btn" style="--btn-hue:var(--colour-pulsar)" href="https://github.com/Abrarayman27" target="_blank" rel="noreferrer">GitHub ↗</a>
+      <a class="btn" style="--btn-hue:var(--colour-corona)" href="https://www.instagram.com/bero_palette" target="_blank" rel="noreferrer">Instagram ↗</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__in">
+    <span class="footer__logo"><span class="t">&lt;</span>AbrarAyman<span class="t">/&gt;</span></span>
+    <q>"Serious about design. Playful about possibilities."</q>
+    <span>© 2025 — Alexandria, Egypt</span>
+  </div>
+</footer>
+
+<!-- 3D mobile mockup (opened by the "3D mockup" buttons) -->
+<dialog class="mockup" id="mockup" aria-labelledby="mockTitle">
+  <div class="mockup__bar"><span>mockup<b>.3d</b> — <span id="mockTitle"></span></span><button type="button" class="mockup__x" id="mockClose" aria-label="Close mockup">×</button></div>
+  <div class="mockup__stage" id="mockStage">
+    <div class="phone" id="phone">
+      <div class="phone__front"><div class="phone__screen" id="phoneScreen"><img id="phoneImg" alt="" /><div class="phone__empty"><span>Add your screenshot<code id="phonePath"></code></span></div><i class="phone__island"></i><i class="phone__glare"></i></div></div>
+      <div class="phone__back"><div class="phone__cam"><i></i><i></i><i></i><i></i></div><span class="phone__logo" id="phoneLogo"></span></div>
+      <span class="phone__shadow"></span>
+    </div>
+    <p class="mockup__hint type-annotation">drag to rotate ↻</p>
+  </div>
+  <div class="mockup__foot">
+    <div class="mockup__views" role="group" aria-label="View">
+      <button type="button" data-view="front">Front</button><button type="button" data-view="side">Side</button><button type="button" data-view="back">Back</button><button type="button" id="mockSpin" aria-pressed="true">Auto-spin</button>
+    </div>
+    <div class="mockup__links"><a id="mockCase" href="#" target="_blank" rel="noreferrer">View case study ↗</a><a id="mockBehance" href="#" target="_blank" rel="noreferrer">Behance ↗</a></div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const root = document.documentElement;
+  const HUES = ['quasar','pulsar','corona','supernova','flare','nebula','solstice','orbit','tidal','aurora'];
+  const hueVar = h => `var(--colour-${h})`;
+  const hueHex = h => getComputedStyle(root).getPropertyValue(`--colour-${h}`).trim();
+
+  /* 1. Curtain intro */
+  setTimeout(() => { $('.curtain').classList.add('is-done'); document.body.classList.remove('is-loading'); }, 1300);
+
+  /* 2. Split hero name into letters; hover → new hue */
+  let n = 0;
+  $$('[data-split]').forEach(el => {
+    const txt = el.textContent; el.textContent = '';
+    [...txt].forEach(ch => {
+      const s = document.createElement('span'); s.className = 'l'; s.textContent = ch; s.style.setProperty('--n', n++); s.setAttribute('aria-hidden', 'true');
+      el.appendChild(s);
+    });
+  });
+  let last = -1;
+  $$('.stage__object .l').forEach(l => {
+    const recolour = () => { let i; do { i = Math.floor(Math.random() * HUES.length); } while (i === last); last = i; l.style.setProperty('--c', hueVar(HUES[i])); };
+    l.addEventListener('mouseenter', recolour); l.addEventListener('touchstart', recolour, { passive: true });
+  });
+
+  /* 3. Token playground */
+  const code = $('#tokenCode'), panel = $('#tokenPanel'), tools = $$('.stage__tool');
+  const state = { colour: null, type: 1, spacing: -0.04, radius: 20, opacity: 1 };
+  const line = (name, val) => `<span class="tok-p">${name}</span>: <span class="tok-s">${val}</span>;`;
+  const render = () => {
+    code.innerHTML = [
+      '<span class="tok-c">/* design tokens — press 1–5 to edit */</span>',
+      line('--colour-accent', state.colour ? hueHex(state.colour) : 'inherit'),
+      line('--type-scale', state.type.toFixed(2)),
+      line('--space-tracking', state.spacing.toFixed(2) + 'em'),
+      line('--radius', state.radius + 'px'),
+      line('--opacity', state.opacity.toFixed(2)),
+    ].join('\n');
+  };
+  const apply = () => {
+    root.style.setProperty('--hero-scale', state.type);
+    root.style.setProperty('--hero-track', state.spacing + 'em');
+    root.style.setProperty('--radius', state.radius + 'px');
+    root.style.setProperty('--hero-alpha', state.opacity);
+    $$('.stage__object .l').forEach(l => l.style.setProperty('--c', state.colour ? hueVar(state.colour) : 'var(--ink)'));
+    render();
+  };
+  const slider = (key, min, max, step, tool) => {
+    panel.innerHTML = `<input type="range" min="${min}" max="${max}" step="${step}" value="${state[key]}" aria-label="${tool}" />`;
+    const inp = $('input', panel); inp.style.setProperty('--tool-hue', getComputedStyle(tools.find(t => t.dataset.tool === tool)).getPropertyValue('--tool-hue'));
+    inp.addEventListener('input', () => { state[key] = parseFloat(inp.value); if (key !== 'colour') apply(); });
+  };
+  const select = tool => {
+    tools.forEach(t => t.setAttribute('aria-pressed', String(t.dataset.tool === tool)));
+    panel.classList.toggle('is-on', !!tool); panel.innerHTML = '';
+    if (tool === 'colour') {
+      HUES.forEach(h => { const b = document.createElement('button'); b.className = 'swatch'; b.style.setProperty('--sw', hueVar(h)); b.setAttribute('aria-label', h); b.onclick = () => { state.colour = h; apply(); }; panel.appendChild(b); });
+      const reset = document.createElement('button'); reset.className = 'type-label'; reset.textContent = 'reset'; reset.onclick = () => { state.colour = null; apply(); }; panel.appendChild(reset);
+    }
+    if (tool === 'type') slider('type', 0.6, 1.2, 0.02, 'type');
+    if (tool === 'spacing') slider('spacing', -0.08, 0.15, 0.01, 'spacing');
+    if (tool === 'radius') slider('radius', 0, 48, 1, 'radius');
+    if (tool === 'opacity') slider('opacity', 0.2, 1, 0.05, 'opacity');
+  };
+  tools.forEach(t => t.addEventListener('click', () => select(t.getAttribute('aria-pressed') === 'true' ? null : t.dataset.tool)));
+  addEventListener('keydown', e => {
+    if (e.target.matches('input, textarea') || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key >= '1' && e.key <= '5') select(tools[+e.key - 1].dataset.tool);
+    if (e.key === 'Escape') { select(null); closeMenu(); }
+  });
+  render();
+
+  /* 4. Nav: stuck state, counts, scroll-spy, mobile menu */
+  const navWrap = $('.nav-wrapper');
+  const onScroll = () => navWrap.classList.toggle('is-stuck', scrollY > 20);
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  $$('.nav__link').forEach(a => {
+    const sec = document.getElementById(a.dataset.target); const c = $('.nav__count', a);
+    if (sec && c) { const k = $$('[data-item]', sec).length; if (k) c.textContent = k; }
+  });
+  const links = $$('.nav__link');
+  const spy = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) links.forEach(l => l.setAttribute('aria-current', String(l.dataset.target === e.target.id)));
+  }), { rootMargin: '-45% 0px -50% 0px' });
+  $$('main .section').forEach(s => spy.observe(s));
+
+  const burger = $('#burger'), menu = $('#mobileMenu');
+  function closeMenu() { menu.classList.remove('is-open'); burger.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; }
+  burger.addEventListener('click', () => { const o = menu.classList.toggle('is-open'); burger.setAttribute('aria-expanded', String(o)); document.body.style.overflow = o ? 'hidden' : ''; });
+  $$('a', menu).forEach(a => a.addEventListener('click', closeMenu));
+
+  /* 5. Reveal on scroll */
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }), { threshold: 0.12 });
+  $$('.reveal').forEach(el => io.observe(el));
+
+  /* 6. 3D mobile mockup modal */
+  const dlg = $('#mockup'), stage = $('#mockStage'), phone = $('#phone'), img = $('#phoneImg'), scr = $('#phoneScreen');
+  for (let i = -8; i <= 8; i++) { const l = document.createElement('i'); l.className = 'phone__layer'; l.style.transform = `translateZ(${i}px)`; phone.prepend(l); }
+  const glare = $('.phone__glare', phone), spinBtn = $('#mockSpin');
+  let rx = -8, ry = 24, vx = 0, vy = 0, tx = null, ty = null, drag = false, lx = 0, ly = 0, raf = 0, spin = true;
+  const frame = () => {
+    if (!drag) {
+      if (ty !== null) { ry += (ty - ry) * 0.12; rx += (tx - rx) * 0.12; if (Math.abs(ty - ry) < .2 && Math.abs(tx - rx) < .2) { ry = ty; rx = tx; ty = tx = null; } }
+      else { ry += vy; rx += vx; vy *= .94; vx *= .94; if (spin && Math.abs(vy) < .15) ry += .25; rx += (-8 - rx) * .02; }
+    }
+    rx = Math.max(-50, Math.min(50, rx));
+    phone.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+    glare.style.setProperty('--gx', (50 - Math.sin(ry * Math.PI / 180) * 90) + '%');
+    raf = requestAnimationFrame(frame);
+  };
+  stage.addEventListener('pointerdown', e => { drag = true; tx = ty = null; lx = e.clientX; ly = e.clientY; stage.classList.add('is-drag'); stage.setPointerCapture(e.pointerId); });
+  stage.addEventListener('pointermove', e => { if (!drag) return; vy = (e.clientX - lx) * .45; vx = -(e.clientY - ly) * .3; ry += vy; rx += vx; lx = e.clientX; ly = e.clientY; });
+  const end = () => { drag = false; stage.classList.remove('is-drag'); };
+  stage.addEventListener('pointerup', end); stage.addEventListener('pointercancel', end);
+  const setView = v => { spin = false; spinBtn.setAttribute('aria-pressed', 'false'); tx = -4;
+    ty = v === 'front' ? Math.round(ry / 360) * 360 : v === 'back' ? Math.round((ry - 180) / 360) * 360 + 180 : Math.round((ry - 90) / 360) * 360 + 90; };
+  $$('[data-view]').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+  spinBtn.addEventListener('click', () => { spin = !spin; spinBtn.setAttribute('aria-pressed', String(spin)); ty = tx = null; });
+
+  $$('[data-mockup]').forEach(btn => btn.addEventListener('click', () => {
+    const d = btn.dataset;
+    dlg.style.setProperty('--mk-hue', `var(--colour-${d.hue})`);
+    $('#mockTitle').textContent = d.title; $('#phoneLogo').textContent = d.title; $('#phonePath').textContent = d.screen;
+    $('#mockCase').href = d.case; $('#mockBehance').href = d.behance;
+    scr.classList.remove('has-img'); img.alt = d.title + ' — app screen';
+    img.onload = () => scr.classList.add('has-img'); img.onerror = () => scr.classList.remove('has-img'); img.removeAttribute('src'); img.src = d.screen;
+    rx = -8; ry = 24; vx = vy = 0; spin = true; spinBtn.setAttribute('aria-pressed', 'true'); tx = ty = null;
+    dlg.showModal(); cancelAnimationFrame(raf); frame();
+  }));
+  const closeMock = () => dlg.close();
+  $('#mockClose').addEventListener('click', closeMock);
+  dlg.addEventListener('click', e => { if (e.target === dlg) closeMock(); });
+  dlg.addEventListener('close', () => cancelAnimationFrame(raf));
+
+  /* 7. Certificates: cursor tilt + spotlight, click to flip */
+  $$('.cert').forEach(c => {
+    const faces = { front: $('.cert__front', c), back: $('.cert__back', c) };
+    const flip = () => { const f = c.classList.toggle('is-flipped'); faces.front.inert = f; faces.back.inert = !f; (f ? faces.back : faces.front).querySelector('.cert__flip').focus({ preventScroll: true }); };
+    $$('.cert__flip', c).forEach(b => b.addEventListener('click', e => { e.stopPropagation(); flip(); }));
+    c.addEventListener('click', e => { if (!e.target.closest('a, button')) flip(); });
+    if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
+      c.addEventListener('pointermove', e => {
+        const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        c.classList.add('is-tilting'); c.style.setProperty('--ty', ((x - .5) * 14) + 'deg'); c.style.setProperty('--tx', ((.5 - y) * 14) + 'deg');
+        faces.front.style.setProperty('--mx', x * 100 + '%'); faces.front.style.setProperty('--my', y * 100 + '%');
+      });
+      c.addEventListener('pointerleave', () => { c.classList.remove('is-tilting'); c.style.setProperty('--ty', '0deg'); c.style.setProperty('--tx', '0deg'); });
+    }
+  });
+})();
+</script>
+</body>
+</html>
