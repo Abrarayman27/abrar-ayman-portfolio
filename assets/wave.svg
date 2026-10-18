@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="64" viewBox="0 0 1000 64" role="presentation" aria-hidden="true"><style>.d{animation:bob 2.4s ease-in-out var(--d) infinite}@keyframes bob{0%,100%{transform:translateY(10px)}50%{transform:translateY(-10px)}}@media (prefers-reduced-motion:reduce){.d{animation:none}}</style>
+<line x1="40" y1="32" x2="960" y2="32" stroke="#888" stroke-opacity=".25"/>
+<circle class="d" cx="100" cy="32" r="9" fill="#bf9ff1" style="--d:-0.00s"/>
+<circle class="d" cx="189" cy="32" r="9" fill="#68d0ca" style="--d:-0.24s"/>
+<circle class="d" cx="278" cy="32" r="9" fill="#f28bad" style="--d:-0.48s"/>
+<circle class="d" cx="367" cy="32" r="9" fill="#f78d2c" style="--d:-0.72s"/>
+<circle class="d" cx="456" cy="32" r="9" fill="#e15e42" style="--d:-0.96s"/>
+<circle class="d" cx="545" cy="32" r="9" fill="#7193ed" style="--d:-1.20s"/>
+<circle class="d" cx="634" cy="32" r="9" fill="#ffc700" style="--d:-1.44s"/>
+<circle class="d" cx="723" cy="32" r="9" fill="#73bde7" style="--d:-1.68s"/>
+<circle class="d" cx="812" cy="32" r="9" fill="#15ad70" style="--d:-1.92s"/>
+<circle class="d" cx="901" cy="32" r="9" fill="#f5d4c0" style="--d:-2.16s"/>
+</svg>

@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="460" viewBox="0 0 1280 460" role="img" aria-label="Abrar Ayman — Product Designer and Flutter Developer. Animated portfolio banner.">
+<title>Abrar Ayman — Product Designer | Flutter Developer</title><style>
+:root{--spring:cubic-bezier(.34,1.56,.64,1);--ease:cubic-bezier(.22,1,.36,1)}
+.l{transform-box:fill-box;transform-origin:50% 100%;animation:rise .95s var(--spring) var(--d) backwards,wave 7s ease-in-out calc(var(--d) + 2s) infinite,sweep 9s linear calc(var(--d) + 1s) infinite}
+@keyframes rise{from{transform:translateY(70px) scaleY(.55);opacity:0}to{transform:none;opacity:1}}
+@keyframes wave{0%,10%,100%{transform:none}4%{transform:translateY(-9px)}7%{transform:translateY(2px)}}
+@keyframes sweep{0%,62%,100%{fill:#f4f2ee}68%,84%{fill:var(--c)}92%{fill:#f4f2ee}}
+.type{animation:typing 2.6s steps(36,end) 1.9s backwards}
+@keyframes typing{from{width:0}to{width:570px}}
+.caret{animation:caret .9s steps(1) infinite, caretmove 2.6s steps(36,end) 1.9s both}
+@keyframes caret{50%{opacity:0}}
+@keyframes caretmove{from{transform:translateX(0)}to{transform:translateX(560px)}}
+.fade{animation:fade .9s var(--ease) 4.6s backwards}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.nav{animation:fade .8s var(--ease) .3s backwards}
+.pill{animation:lit 10s linear var(--d) infinite}
+.pill text{animation:litt 10s linear var(--d) infinite}
+@keyframes lit{0%,3%{fill:#121213}5%,17%{fill:var(--c)}20%,100%{fill:#121213}}
+@keyframes litt{0%,3%{fill:var(--c)}5%,17%{fill:#121213}20%,100%{fill:var(--c)}}
+.dot{animation:float var(--t) ease-in-out var(--d) infinite alternate}
+@keyframes float{from{transform:translateY(0)}to{transform:translateY(-26px)}}
+.glow1{animation:drift 14s ease-in-out infinite alternate}
+.glow2{animation:drift 18s ease-in-out -6s infinite alternate-reverse}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(70px,40px)}}
+.status i{animation:ping 2s infinite}
+@keyframes ping{0%{opacity:1}70%,100%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<defs><pattern id="g" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#fff" stroke-opacity=".07"/></pattern><radialGradient id="r1"><stop offset="0" stop-color="#bf9ff1" stop-opacity=".34"/><stop offset="1" stop-color="#bf9ff1" stop-opacity="0"/></radialGradient><radialGradient id="r2"><stop offset="0" stop-color="#68d0ca" stop-opacity=".26"/><stop offset="1" stop-color="#68d0ca" stop-opacity="0"/></radialGradient><radialGradient id="m" cx=".5" cy=".45" r=".7"><stop offset=".25" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient><mask id="gm"><rect width="1280" height="460" fill="url(#m)"/></mask><clipPath id="tc"><rect class="type" x="360" y="318" height="40" width="570"/></clipPath></defs>
+<rect width="1280" height="460" rx="24" fill="#121213"/>
+<g class="glow1"><circle cx="1080" cy="40" r="360" fill="url(#r1)"/></g><g class="glow2"><circle cx="170" cy="470" r="340" fill="url(#r2)"/></g>
+<rect width="1280" height="460" rx="24" fill="url(#g)" mask="url(#gm)"/>
+<circle class="dot" cx="90" cy="389" r="5" fill="#bf9ff1" opacity=".7" style="--t:3s;--d:-0.0s"/>
+<circle class="dot" cx="191" cy="384" r="6" fill="#68d0ca" opacity=".7" style="--t:4s;--d:-0.7s"/>
+<circle class="dot" cx="312" cy="403" r="6" fill="#f28bad" opacity=".7" style="--t:5s;--d:-1.4s"/>
+<circle class="dot" cx="427" cy="412" r="4" fill="#f78d2c" opacity=".7" style="--t:6s;--d:-2.1s"/>
+<circle class="dot" cx="544" cy="385" r="5" fill="#e15e42" opacity=".7" style="--t:3s;--d:-2.8s"/>
+<circle class="dot" cx="686" cy="384" r="4" fill="#7193ed" opacity=".7" style="--t:4s;--d:-3.5s"/>
+<circle class="dot" cx="783" cy="415" r="5" fill="#ffc700" opacity=".7" style="--t:5s;--d:-4.2s"/>
+<circle class="dot" cx="899" cy="416" r="4" fill="#73bde7" opacity=".7" style="--t:6s;--d:-4.9s"/>
+<circle class="dot" cx="1028" cy="420" r="6" fill="#15ad70" opacity=".7" style="--t:3s;--d:-5.6s"/>
+<circle class="dot" cx="1169" cy="383" r="6" fill="#f5d4c0" opacity=".7" style="--t:4s;--d:-6.3s"/>
+<g class="nav" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace" font-size="17" font-weight="600"><text x="56" y="62" fill="#f4f2ee"><tspan fill="#bf9ff1">&lt;</tspan>AbrarAyman<tspan fill="#bf9ff1">/&gt;</tspan></text>
+<text x="600" y="62" fill="#f4f2ee" font-weight="500">Work<tspan fill="#bf9ff1"> /&gt;</tspan></text>
+<text x="699.6" y="62" fill="#f4f2ee" font-weight="500">Lab<tspan fill="#68d0ca"> /&gt;</tspan></text>
+<text x="789.0" y="62" fill="#f4f2ee" font-weight="500">Exp<tspan fill="#f78d2c"> /&gt;</tspan></text>
+<text x="878.4" y="62" fill="#f4f2ee" font-weight="500">About<tspan fill="#7193ed"> /&gt;</tspan></text>
+<text x="988.1999999999999" y="62" fill="#f4f2ee" font-weight="500">Contact<tspan fill="#ffc700"> /&gt;</tspan></text>
+<g class="status"><rect x="1096" y="40" width="130" height="34" rx="17" fill="none" stroke="#fff" stroke-opacity=".16"/><circle cx="1117" cy="57" r="5" fill="#15ad70"/><text x="1130" y="62" font-size="13" fill="#15ad70" font-weight="500">open to work</text></g></g>
+<g transform="translate(89.5,262)"><path class="l" d="M80 -114.9 121.8 0H88L55.6 -98.3H67.5L34.9 0H1.3L43.2 -114.9ZM27.5 -43.2H92.3L100.2 -18.7H19.6Z" fill="#f4f2ee" style="--d:0.45s;--c:#bf9ff1"/></g>
+<g transform="translate(207.6,262)"><path class="l" d="M68.9 1.1Q59 1.1 51.5 -4.5Q44 -10.1 41.1 -20.4V-15.6Q41.1 -8.2 37.1 -4.1Q33.1 0 25.4 0H9.1V-120.6H41.1V-70.9Q44 -81.2 51.5 -86.9Q59 -92.6 68.9 -92.6Q81 -92.6 89.5 -86.1Q98 -79.7 102.4 -69Q106.8 -58.4 106.8 -45.6Q106.8 -32.9 102.4 -22.2Q98 -11.6 89.5 -5.2Q81 1.1 68.9 1.1ZM57.7 -26.9Q62.4 -26.9 66.2 -29.2Q69.9 -31.5 72 -35.6Q74.2 -39.8 74.2 -45.6Q74.2 -51.7 72 -55.9Q69.9 -60.1 66.2 -62.4Q62.4 -64.7 57.7 -64.7Q53 -64.7 49.2 -62.3Q45.5 -60 43.3 -55.7Q41.1 -51.5 41.1 -45.6Q41.1 -39.8 43.3 -35.6Q45.5 -31.5 49.2 -29.2Q53 -26.9 57.7 -26.9Z" fill="#f4f2ee" style="--d:0.52s;--c:#68d0ca"/></g>
+<g transform="translate(313.4,262)"><path class="l" d="M9.1 0V-91.4H41.1V0ZM37.3 -36 41.1 -68.5Q43.8 -79.5 51.2 -85.9Q58.5 -92.3 70.7 -92.3V-58.7Q68.8 -59.2 67 -59.3Q65.2 -59.5 63.4 -59.5Q57.7 -59.5 52.6 -56.7Q47.4 -54 44.3 -48.7Q41.1 -43.5 41.1 -36Z" fill="#f4f2ee" style="--d:0.59s;--c:#f28bad"/></g>
+<g transform="translate(381.6,262)"><path class="l" d="M41.7 1.1Q29.7 1.1 21.2 -5.2Q12.7 -11.6 8.3 -22.2Q3.9 -32.9 3.9 -45.6Q3.9 -58.4 8.3 -69Q12.7 -79.7 21.2 -86.1Q29.7 -92.6 41.7 -92.6Q51.8 -92.6 59.3 -86.9Q66.7 -81.2 69.6 -70.9V-91.4H101.5V0H85.2Q77.8 0 73.7 -4.1Q69.6 -8.2 69.6 -15.6V-20.4Q66.7 -10.1 59.3 -4.5Q51.8 1.1 41.7 1.1ZM53 -26.9Q57.7 -26.9 61.5 -29.2Q65.2 -31.4 67.4 -35.6Q69.6 -39.8 69.6 -45.6Q69.6 -51.4 67.4 -55.7Q65.2 -60 61.4 -62.3Q57.6 -64.7 52.9 -64.7Q48.2 -64.7 44.5 -62.3Q40.8 -60 38.6 -55.7Q36.5 -51.4 36.5 -45.6Q36.5 -39.8 38.6 -35.6Q40.8 -31.5 44.5 -29.2Q48.3 -26.9 53 -26.9Z" fill="#f4f2ee" style="--d:0.66s;--c:#f78d2c"/></g>
+<g transform="translate(487.4,262)"><path class="l" d="M9.1 0V-91.4H41.1V0ZM37.3 -36 41.1 -68.5Q43.8 -79.5 51.2 -85.9Q58.5 -92.3 70.7 -92.3V-58.7Q68.8 -59.2 67 -59.3Q65.2 -59.5 63.4 -59.5Q57.7 -59.5 52.6 -56.7Q47.4 -54 44.3 -48.7Q41.1 -43.5 41.1 -36Z" fill="#f4f2ee" style="--d:0.73s;--c:#e15e42"/></g>
+<g transform="translate(581.7,262)"><path class="l" d="M80 -114.9 121.8 0H88L55.6 -98.3H67.5L34.9 0H1.3L43.2 -114.9ZM27.5 -43.2H92.3L100.2 -18.7H19.6Z" fill="#f4f2ee" style="--d:0.87s;--c:#ffc700"/></g>
+<g transform="translate(699.9,262)"><path class="l" d="M68.1 -5.2V-91.4H99.9V-5.2Q99.9 3.9 97.2 12.8Q94.5 21.7 88.8 28.9Q83 36 73.6 40.3Q64.2 44.7 50.7 44.7Q39.8 44.7 30.1 41.1Q20.4 37.5 13.4 30.6Q6.4 23.8 3.3 14L30.6 4.9Q32.9 9.8 37.6 13.4Q42.2 17 49.2 17Q59 17 63.6 10.8Q68.1 4.6 68.1 -5.2ZM71.2 -43.4Q71.2 -30.6 68.8 -22.3Q66.3 -14 62.3 -9.3Q58.2 -4.6 53.1 -2.6Q47.9 -0.7 42.4 -0.7Q31.8 -0.7 23.7 -5.7Q15.6 -10.8 11.2 -19.8Q6.7 -28.9 6.7 -40.8V-91.4H38.1V-44.3Q38.1 -36.3 42.2 -31.9Q46.3 -27.5 53.1 -27.5Q58 -27.5 61.4 -29.9Q64.7 -32.3 66.4 -36.4Q68.1 -40.6 68.1 -46Z" fill="#f4f2ee" style="--d:0.94s;--c:#73bde7"/></g>
+<g transform="translate(803.9,262)"><path class="l" d="M9.1 0V-91.4H41.1V-71.7Q43 -78.4 47.3 -83Q51.5 -87.7 57.2 -90.1Q62.9 -92.6 69.3 -92.6Q81.3 -92.6 88.9 -85.2Q96.5 -77.8 98.1 -64.2Q99.9 -74.3 104.6 -80.5Q109.4 -86.7 116.1 -89.7Q122.7 -92.6 130.2 -92.6Q147.5 -92.6 156.6 -82.1Q165.6 -71.6 165.6 -53.6V0H133.7V-49.4Q133.7 -57.2 129.5 -61.7Q125.3 -66.2 118.5 -66.2Q111.7 -66.2 107.5 -60.9Q103.3 -55.6 103.3 -47.8V0H71.4V-49.4Q71.4 -57.2 67.3 -61.7Q63.2 -66.2 56.4 -66.2Q51.8 -66.2 48.4 -63.7Q45 -61.3 43 -57.1Q41.1 -53 41.1 -47.8V0Z" fill="#f4f2ee" style="--d:1.01s;--c:#15ad70"/></g>
+<g transform="translate(972.9,262)"><path class="l" d="M41.7 1.1Q29.7 1.1 21.2 -5.2Q12.7 -11.6 8.3 -22.2Q3.9 -32.9 3.9 -45.6Q3.9 -58.4 8.3 -69Q12.7 -79.7 21.2 -86.1Q29.7 -92.6 41.7 -92.6Q51.8 -92.6 59.3 -86.9Q66.7 -81.2 69.6 -70.9V-91.4H101.5V0H85.2Q77.8 0 73.7 -4.1Q69.6 -8.2 69.6 -15.6V-20.4Q66.7 -10.1 59.3 -4.5Q51.8 1.1 41.7 1.1ZM53 -26.9Q57.7 -26.9 61.5 -29.2Q65.2 -31.4 67.4 -35.6Q69.6 -39.8 69.6 -45.6Q69.6 -51.4 67.4 -55.7Q65.2 -60 61.4 -62.3Q57.6 -64.7 52.9 -64.7Q48.2 -64.7 44.5 -62.3Q40.8 -60 38.6 -55.7Q36.5 -51.4 36.5 -45.6Q36.5 -39.8 38.6 -35.6Q40.8 -31.5 44.5 -29.2Q48.3 -26.9 53 -26.9Z" fill="#f4f2ee" style="--d:1.08s;--c:#f5d4c0"/></g>
+<g transform="translate(1078.7,262)"><path class="l" d="M9.1 0V-91.4H41.1V-71.7Q43 -78.4 47.3 -83Q51.5 -87.7 57.2 -90.1Q62.9 -92.6 69.3 -92.6Q79.7 -92.6 87.4 -87.8Q95 -83 99.2 -74.2Q103.3 -65.5 103.3 -53.6V0H71.4V-49.4Q71.4 -57.2 67.3 -61.7Q63.2 -66.2 56.4 -66.2Q51.5 -66.2 48.1 -63.7Q44.7 -61.3 42.9 -57.1Q41.1 -53 41.1 -47.8V0Z" fill="#f4f2ee" style="--d:1.15s;--c:#bf9ff1"/></g>
+<text clip-path="url(#tc)" x="360" y="346" textLength="560" lengthAdjust="spacing" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace" font-size="26" font-weight="500" fill="#f4f2ee">Product Designer <tspan fill="#f28bad">|</tspan> Flutter Developer</text>
+<rect class="caret" x="360" y="322" width="3" height="32" fill="#68d0ca"/>
+<text class="fade" x="640.0" y="392" text-anchor="middle" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#f4f2ee"><tspan fill="#68d0ca" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace">&gt; </tspan>Designing Meaningful Digital Experiences</text>
+<g class="pill" style="--c:#68d0ca;--d:0s"><rect x="332" y="410" width="115" height="30" rx="15" stroke="#68d0ca" stroke-width="1.5" fill="#121213" style="animation:inherit"/><text x="390" y="430" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace" font-size="13" font-weight="600" fill="#68d0ca" style="animation:inherit;animation-name:litt">1 COLOUR</text></g>
+<g class="pill" style="--c:#bf9ff1;--d:2s"><rect x="457" y="410" width="96" height="30" rx="15" stroke="#bf9ff1" stroke-width="1.5" fill="#121213" style="animation:inherit"/><text x="505" y="430" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace" font-size="13" font-weight="600" fill="#bf9ff1" style="animation:inherit;animation-name:litt">2 TYPE</text></g>
+<g class="pill" style="--c:#e15e42;--d:4s"><rect x="564" y="410" width="125" height="30" rx="15" stroke="#e15e42" stroke-width="1.5" fill="#121213" style="animation:inherit"/><text x="626" y="430" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace" font-size="13" font-weight="600" fill="#e15e42" style="animation:inherit;animation-name:litt">3 SPACING</text></g>
+<g class="pill" style="--c:#ffc700;--d:6s"><rect x="698" y="410" width="115" height="30" rx="15" stroke="#ffc700" stroke-width="1.5" fill="#121213" style="animation:inherit"/><text x="756" y="430" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace" font-size="13" font-weight="600" fill="#ffc700" style="animation:inherit;animation-name:litt">4 RADIUS</text></g>
+<g class="pill" style="--c:#7193ed;--d:8s"><rect x="823" y="410" width="125" height="30" rx="15" stroke="#7193ed" stroke-width="1.5" fill="#121213" style="animation:inherit"/><text x="886" y="430" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace" font-size="13" font-weight="600" fill="#7193ed" style="animation:inherit;animation-name:litt">5 OPACITY</text></g>
+</svg>
