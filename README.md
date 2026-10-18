@@ -261,7 +261,6 @@ The nav counter, scroll reveal and 3D viewer pick the new card up automatically.
 
 ## 🙌 Credits
 
-- Token-first approach inspired by [hipuku.dev](https://www.hipuku.dev/); palette adapted from its logo colours
 - Fonts: [Parkinsans](https://fonts.google.com/specimen/Parkinsans), [Inter](https://rsms.me/inter/), [JetBrains Mono](https://www.jetbrains.com/lp/mono/), [Caveat](https://fonts.google.com/specimen/Caveat), all open-source (SIL OFL)
 - App screens, case studies and copy © Abrar Ayman. Please ask before reusing them. (Add a `LICENSE` file if you'd like to open-source the code.)
 
