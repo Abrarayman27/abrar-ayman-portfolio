@@ -411,6 +411,247 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .reveal { opacity: 1; transform: none; }
 }
 </style>
+<style>
+/* ===== GALLERY + PROJECT PAGES ===== */
+/* ==========================================================================
+   Gallery — floating-card Gallery section + project pages + duo cards
+   Everything lives in this one file. Uses the portfolio's own tokens
+   (--bg, --ink, --line, --colour-*, --font-*, --ease, --spring …).
+   ========================================================================== */
+
+/* -------------------------------------------------------------------------
+   1. GALLERY SECTION (WebGL ribbon)
+   ------------------------------------------------------------------------- */
+.gallery { --hue: var(--colour-corona); overflow: hidden; }
+.gallery::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(50% 42% at 50% 58%, color-mix(in oklab, var(--colour-corona) 14%, transparent), transparent 72%),
+    radial-gradient(40% 36% at 85% 20%, color-mix(in oklab, var(--colour-quasar) 12%, transparent), transparent 70%);
+}
+.gallery .wrap { position: relative; }
+.gallery__stage { position: relative; width: 100%; height: clamp(440px, 74svh, 760px); }
+.gallery__stage canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  touch-action: pan-y; outline: none; cursor: grab;
+}
+.gallery__stage canvas:focus-visible { outline: 2px solid var(--colour-pulsar); outline-offset: -6px; border-radius: var(--radius); }
+.gallery__stage canvas[data-hover="card"] { cursor: pointer; }
+.gallery__stage canvas[data-dragging] { cursor: grabbing; }
+
+/* no-WebGL fallback: plain list of project links */
+.gallery__fallback { display: none; flex-wrap: wrap; gap: 10px; padding: var(--space-5) 0; }
+.gallery.no-webgl .gallery__fallback { display: flex; }
+.gallery.no-webgl .gallery__stage { display: none; }
+.gallery__fallback a { padding: 12px 18px; border-radius: var(--radius-pill); border: 1.5px solid var(--colour-corona); color: var(--colour-corona); font: 600 .9rem/1 var(--font-mono); }
+.gallery__fallback a:hover { background: var(--colour-corona); color: #121213; }
+
+/* -------------------------------------------------------------------------
+   2. PROJECT PAGE (full-screen overlay, opened from a gallery card)
+   ------------------------------------------------------------------------- */
+.gpage {
+  /* duo-card design tokens */
+  --u: min(1px, calc((100vw - 32px) / 653));
+  --p: 1px;
+  --half-w: calc(315 * var(--u));
+  --card-h: calc(458 * var(--u));
+  --radius-outer: calc(40 * var(--u));
+  --radius-hinge: calc(6 * var(--u));
+  --perspective: calc(1680 * var(--u));
+  --cover-pad: calc(20 * var(--u));
+  --cover-body-pad: calc(19 * var(--u));
+  --inside-pad: calc(28 * var(--u));
+  --body-w: calc(234 * var(--u));
+  --blur-max: calc(28 * var(--u));
+  --stats-left: calc(209 * var(--u));
+  --stats-gap: calc(20 * var(--u));
+  --stat-w: calc(79 * var(--u));
+  --stat-circle: calc(72 * var(--u));
+  --stat-inner-gap: calc(8 * var(--u));
+  --stat-rise: calc(8 * var(--u));
+  --glass-blur: calc(2.5 * var(--u));
+  --glass-saturate: 1.8;
+  --glass-fill: rgba(255, 255, 255, 0.06);
+  --glass-edge: rgba(255, 255, 255, 0.55);
+  --glass-edge-soft: rgba(255, 255, 255, 0.12);
+  --glass-edge-mid: rgba(255, 255, 255, 0.3);
+  --title-size: calc(24 * var(--u)); --title-leading: calc(29 * var(--u));
+  --body-size: calc(16 * var(--u));  --body-leading: calc(18 * var(--u));
+  --label-size: calc(14 * var(--u)); --label-leading: calc(16 * var(--u));
+  --value-size: calc(24 * var(--u)); --value-leading: calc(29 * var(--u));
+  --tracking: -0.02em;
+  --stretch: 91%;
+
+  position: fixed; inset: 0; z-index: 150; background: var(--bg); color: var(--ink);
+  overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
+  opacity: 0; visibility: hidden;
+  transition: opacity .5s var(--ease), visibility 0s linear .5s;
+}
+.gpage.is-open { opacity: 1; visibility: visible; transition: opacity .5s var(--ease); }
+.gpage::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(55% 45% at 85% 0%, color-mix(in oklab, var(--hue) 20%, transparent), transparent 70%),
+    radial-gradient(45% 40% at 5% 100%, color-mix(in oklab, var(--hue) 12%, transparent), transparent 70%);
+}
+.gp__wrap { position: relative; width: min(1400px, 100% - 48px); margin-inline: auto; }
+
+.gp__bar {
+  position: sticky; top: 0; z-index: 5; background: rgba(18, 18, 19, .78); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.gp__bar .gp__wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: var(--nav-h); }
+.gp__crumb { font: 500 .8rem var(--font-mono); color: var(--ink-muted); white-space: nowrap; }
+.gp__crumb b { color: var(--hue); font-weight: 500; }
+
+.gbtn {
+  position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px;
+  border-radius: var(--radius-pill); border: 1.5px solid var(--hue); color: var(--hue);
+  font: 600 .82rem/1 var(--font-mono); letter-spacing: .02em; overflow: hidden; isolation: isolate;
+  transition: color .3s, transform .35s var(--spring);
+}
+.gbtn::before { content: ""; position: absolute; inset: 0; background: var(--hue); transform: translateY(101%); transition: transform .4s var(--ease); z-index: -1; }
+.gbtn:hover { color: #121213; transform: translateY(-2px) rotate(-1deg); }
+.gbtn:hover::before { transform: none; }
+.gbtn--solid { background: var(--hue); color: #121213; }
+.gbtn--solid::before { background: var(--ink); }
+.gbtn span { display: inline-block; transition: transform .35s var(--spring); }
+.gbtn:hover span { transform: translate(2px, -2px) rotate(15deg); }
+
+.gp__hero { position: relative; padding: var(--space-8) 0 var(--space-6); display: grid; gap: var(--space-4); }
+.gp__eyebrow { font: 500 .85rem var(--font-mono); color: var(--hue); }
+.gp__eyebrow::before { content: "› "; }
+.gp__title { font: 800 clamp(3rem, 11vw, 9rem)/.92 var(--font-display); letter-spacing: -.045em; color: var(--hue); overflow-wrap: anywhere; }
+.gp__tagline { font: 500 clamp(1rem, 2vw, 1.4rem)/1.3 var(--font-mono); color: var(--ink-muted); }
+.gp__summary { max-width: 62ch; color: #cfcfd4; }
+.gp__links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: var(--space-2); }
+.gp__section-label { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: var(--space-6) 0 var(--space-4); }
+.gp__section-label h3 { font: 700 clamp(1.5rem, 3vw, 2.2rem)/1.1 var(--font-display); letter-spacing: -.025em; }
+.gp__section-label span { font: 500 .75rem var(--font-mono); color: var(--ink-muted); letter-spacing: .06em; text-transform: uppercase; }
+
+.gp__cards {
+  display: grid; gap: calc(24 * var(--u)) 24px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(660 * var(--u))), 1fr));
+}
+.gp__cell {
+  display: grid; place-items: center; height: calc(564 * var(--u)); perspective: var(--perspective);
+  transition: opacity .15s;
+}
+.gp__cell:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+.gp__foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: var(--space-8) 0 var(--space-7); }
+
+/* -------------------------------------------------------------------------
+   3. DUO CARD (one <button>, opens like a book)
+   ------------------------------------------------------------------------- */
+.duo {
+  --turn: 180deg; --spread: 0; --night: 0; --blur-cover: 0; --blur-inside: 0; --hinge-k: 1;
+  position: relative; display: block; width: calc(var(--half-w) * (1 + var(--spread))); height: var(--card-h);
+  border-radius: var(--radius-outer); transform-style: preserve-3d;
+  background: none; border: 0; padding: 0; margin: 0; font: inherit; color: #fff; text-align: left; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  font-family: "Instrument Sans", system-ui, sans-serif; font-weight: 400; font-stretch: var(--stretch); letter-spacing: var(--tracking);
+}
+.duo:focus-visible { outline: 2px solid #fff; outline-offset: calc(8 * var(--u)); }
+.duo span { display: block; }
+
+.duo__flap {
+  position: absolute; top: 0; right: var(--half-w); width: var(--half-w); height: 100%;
+  transform-origin: right center; transform-style: preserve-3d; transform: rotateY(var(--turn)); will-change: transform;
+}
+.duo__face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.duo__cover { transform: rotateY(180deg); border-radius: var(--radius-hinge) var(--radius-outer) var(--radius-outer) var(--radius-hinge); --k: var(--blur-cover); }
+.duo__inside { right: -1px; border-radius: var(--radius-outer) 0 0 var(--radius-outer); --k: var(--blur-inside); }
+.duo__right {
+  position: absolute; top: 0; right: 0; width: var(--half-w); height: 100%; overflow: hidden; will-change: transform;
+  border-radius: calc(var(--radius-hinge) * var(--hinge-k)) var(--radius-outer) var(--radius-outer) calc(var(--radius-hinge) * var(--hinge-k));
+}
+.duo[data-state="folded"] .duo__right { visibility: hidden; }
+
+.duo__photo { position: absolute; inset: 0; background-repeat: no-repeat; }
+.duo__photo--cover {
+  background-image: var(--img-cover);
+  background-size: calc(317 * var(--u)) calc(461.1 * var(--u));
+  background-position: calc(-1 * var(--u)) calc(-1.56 * var(--u));
+}
+.duo__day, .duo__night { background-size: calc(var(--half-w) * 2) 100%; background-position: var(--pos, 0 0); }
+.duo__day { background-image: var(--img-day); }
+.duo__night { background-image: var(--img-night); opacity: var(--night); }
+.duo__right .duo__day, .duo__right .duo__night { --pos: 100% 0; }
+
+.duo__title { position: absolute; font-size: var(--title-size); line-height: var(--title-leading); white-space: nowrap; letter-spacing: var(--tracking); }
+.duo__body { position: absolute; width: var(--body-w); font-size: var(--body-size); line-height: var(--body-leading); letter-spacing: var(--tracking); }
+.duo__cover .duo__title { top: var(--cover-pad); left: var(--cover-pad); }
+.duo__cover .duo__body { left: var(--cover-body-pad); bottom: var(--cover-body-pad); }
+.duo__inside .duo__title { top: var(--inside-pad); left: var(--inside-pad); }
+.duo__inside .duo__body { left: var(--inside-pad); bottom: var(--inside-pad); }
+
+/* progressive blur: sharp copy + two blurred, masked copies */
+.pb { position: absolute; inset: 0; }
+.pb__c { position: absolute; inset: 0; }
+.pb__c--soft, .pb__c--hard { pointer-events: none; opacity: min(1, calc(var(--k) * 4)); }
+.pb__c--soft { filter: blur(calc(var(--blur-max) * var(--k) * 0.4)); }
+.pb__c--hard { filter: blur(calc(var(--blur-max) * var(--k))); }
+.pb--cover .pb__c--soft { -webkit-mask-image: linear-gradient(to right, transparent 20%, #000 55%); mask-image: linear-gradient(to right, transparent 20%, #000 55%); }
+.pb--cover .pb__c--hard { -webkit-mask-image: linear-gradient(to right, transparent 45%, #000 90%); mask-image: linear-gradient(to right, transparent 45%, #000 90%); }
+.pb--inside .pb__c--soft { -webkit-mask-image: linear-gradient(to left, transparent 0%, #000 45%); mask-image: linear-gradient(to left, transparent 0%, #000 45%); }
+.pb--inside .pb__c--hard { -webkit-mask-image: linear-gradient(to left, transparent 35%, #000 95%); mask-image: linear-gradient(to left, transparent 35%, #000 95%); }
+
+/* stats (open card, right leaf) */
+.duo__stats { position: absolute; top: var(--inside-pad); left: var(--stats-left); display: flex; flex-direction: column; gap: var(--stats-gap); }
+.duo__stat {
+  --reveal: 1; display: flex; flex-direction: column; align-items: center; gap: var(--stat-inner-gap); width: var(--stat-w);
+  transform: translateY(calc((1 - var(--reveal)) * var(--stat-rise)));
+}
+.duo__circle {
+  position: relative; width: var(--stat-circle); height: var(--stat-circle); border-radius: 50%; display: grid; place-items: center;
+  background: var(--glass-fill);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  opacity: var(--reveal); transform: scale(calc(0.9 + 0.1 * var(--reveal)));
+}
+.duo__circle::before {
+  content: ""; position: absolute; inset: 0; padding: 1px; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(135deg, var(--glass-edge) 0%, var(--glass-edge-soft) 35%, var(--glass-edge-soft) 65%, var(--glass-edge-mid) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+.duo__value { font-size: var(--value-size); line-height: var(--value-leading); letter-spacing: var(--tracking); }
+.duo__label { width: 100%; text-align: center; white-space: pre; font-size: var(--label-size); line-height: var(--label-leading); letter-spacing: var(--tracking); opacity: var(--reveal); }
+
+/* -------------------------------------------------------------------------
+   4. PHONE LAYOUT (same card, scaled to fit, type re-fitted)
+   ------------------------------------------------------------------------- */
+@media (width < 640px), (height < 526px) and (pointer: coarse) {
+  .gpage {
+    --u: min(calc((100vw - 32px) / 630), 0.7px);
+    --p: min(calc(var(--u) * 630 / 343), 1px);
+    --cover-pad: calc(14 * var(--p)); --cover-body-pad: calc(14 * var(--p)); --inside-pad: calc(14 * var(--p));
+    --body-w: calc(var(--half-w) - 2 * var(--inside-pad));
+    --title-size: calc(20 * var(--p)); --title-leading: calc(24 * var(--p));
+    --body-size: calc(14 * var(--p));  --body-leading: calc(17 * var(--p));
+    --label-size: calc(14 * var(--p)); --label-leading: calc(16 * var(--p));
+    --value-size: calc(18 * var(--p)); --value-leading: calc(22 * var(--p));
+    --stat-circle: calc(44 * var(--p));
+    --stat-inner-gap: calc(10 * var(--p));
+  }
+  .duo__title { white-space: normal; width: var(--body-w); }
+  .duo__stats { top: var(--inside-pad); bottom: var(--inside-pad); left: var(--inside-pad); justify-content: space-between; }
+  .duo__stat { flex-direction: row; width: auto; }
+  .duo__label { width: auto; text-align: left; }
+}
+@media (max-width: 640px) {
+  .gp__wrap { width: calc(100% - 32px); }
+  .gp__hero { padding-top: var(--space-7); }
+  .gp__cards { gap: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gpage, .gpage.is-open { transition-duration: .001ms !important; }
+}
+
+</style>
 </head>
 
 <body class="is-loading">
@@ -424,6 +665,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     <div class="nav__right">
       <ul class="nav__links" role="list" id="navLinks">
         <!-- EDIT: add / remove sections here. data-target = section id, hue = colour token -->
+        <li><a class="nav__link" href="#gallery" data-target="gallery" style="--count-colour:var(--colour-corona);--link-hover-colour:var(--colour-corona)">Gallery<span class="slash">/ &gt;</span></a></li>
         <li><a class="nav__link" href="#work " data-target="work" style="--count-colour:var(--colour-quasar);--link-hover-colour:var(--colour-quasar)">Work<span class="slash">/ &gt;</span><sup class="nav__count" aria-hidden="true"></sup></a></li>
         <li><a class="nav__link" href="#lab " data-target="lab" style="--count-colour:var(--colour-pulsar);--link-hover-colour:var(--colour-pulsar)">Lab<span class="slash">/ &gt;</span></a></li>
         <li><a class="nav__link" href="#experience " data-target="experience" style="--count-colour:var(--colour-supernova);--link-hover-colour:var(--colour-supernova)">Exp<span class="slash">/ &gt;</span></a></li>
@@ -438,6 +680,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 </header>
 
 <div class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+  <a href="#gallery" style="--hue:var(--colour-corona)">Gallery <sup>/&gt;</sup></a>
   <a href="#work" style="--hue:var(--colour-quasar)">Work <sup>/&gt;</sup></a>
   <a href="#lab" style="--hue:var(--colour-pulsar)">Lab <sup>/&gt;</sup></a>
   <a href="#experience" style="--hue:var(--colour-supernova)">Exp <sup>/&gt;</sup></a>
@@ -490,10 +733,23 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 <!-- section links with rolling words -->
 <section class="portals" aria-label="Sections">
   <div class="wrap portals__row">
+    <span class="portal-slot" style="--portal-hue:var(--colour-corona)"><span class="portal__note type-annotation" aria-hidden="true">floating cards</span><a class="portal" href="#gallery"><span class="portal__fill"></span><span class="portal__roll"><span class="portal__word">gallery</span><span class="portal__word" aria-hidden="true">gallery</span></span></a></span>
     <span class="portal-slot" style="--portal-hue:var(--colour-quasar)"><span class="portal__note type-annotation" aria-hidden="true">case studies &amp; projects</span><a class="portal" href="#work"><span class="portal__fill"></span><span class="portal__roll"><span class="portal__word">work</span><span class="portal__word" aria-hidden="true">work</span></span></a></span>
     <span class="portal-slot" style="--portal-hue:var(--colour-pulsar)"><span class="portal__note type-annotation" aria-hidden="true">tools &amp; stack</span><a class="portal" href="#lab"><span class="portal__fill"></span><span class="portal__roll"><span class="portal__word">lab</span><span class="portal__word" aria-hidden="true">lab</span></span></a></span>
     <span class="portal-slot" style="--portal-hue:var(--colour-supernova)"><span class="portal__note type-annotation" aria-hidden="true">where I've been</span><a class="portal" href="#experience"><span class="portal__fill"></span><span class="portal__roll"><span class="portal__word">experience</span><span class="portal__word" aria-hidden="true">experience</span></span></a></span>
     <span class="portal-slot" style="--portal-hue:var(--colour-nebula)"><span class="portal__note type-annotation" aria-hidden="true">who &amp; how</span><a class="portal" href="#about"><span class="portal__fill"></span><span class="portal__roll"><span class="portal__word">about</span><span class="portal__word" aria-hidden="true">about</span></span></a></span>
+  </div>
+</section>
+
+<!-- ============================ GALLERY (floating cards, WebGL) ============================ -->
+<section class="section gallery" id="gallery" style="--hue:var(--colour-corona)">
+  <div class="wrap">
+    <div class="section__head reveal">
+      <h2 class="type-h2 section__title">Gallery <span class="slash">/&gt;</span></h2>
+      <p class="section__sub type-p-lg">Drag the floating cards to browse. Open any project to see its story, mockups and links.</p>
+    </div>
+    <div class="gallery__stage" id="galleryStage"></div>
+    <div class="gallery__fallback" id="galleryFallback"></div>
   </div>
 </section>
 
@@ -939,7 +1195,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   $$('[data-view]').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
   spinBtn.addEventListener('click', () => { spin = !spin; spinBtn.setAttribute('aria-pressed', String(spin)); ty = tx = null; });
 
-  $$('[data-mockup]').forEach(btn => btn.addEventListener('click', () => {
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-mockup]'); if (!btn) return;
     const d = btn.dataset;
     dlg.style.setProperty('--mk-hue', `var(--colour-${d.hue})`);
     $('#mockTitle').textContent = d.title; $('#phoneLogo').textContent = d.title; $('#phonePath').textContent = d.screen;
@@ -948,7 +1205,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     img.onload = () => scr.classList.add('has-img'); img.onerror = () => scr.classList.remove('has-img'); img.removeAttribute('src'); img.src = d.screen;
     rx = -8; ry = 24; vx = vy = 0; spin = true; spinBtn.setAttribute('aria-pressed', 'true'); tx = ty = null;
     dlg.showModal(); cancelAnimationFrame(raf); frame();
-  }));
+  });
   const closeMock = () => dlg.close();
   $('#mockClose').addEventListener('click', closeMock);
   dlg.addEventListener('click', e => { if (e.target === dlg) closeMock(); });
@@ -970,6 +1227,647 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     }
   });
 })();
+</script>
+<script type="module">
+/* ==========================================================================
+   Gallery ribbon (WebGL) + project pages + duo cards
+   --------------------------------------------------------------------------
+   EDIT YOUR CONTENT HERE: the PROJECTS array below is the only thing you need
+   to touch. Every gallery card = one entry. Clicking a card opens that
+   project's page, which shows 5 duo cards (the `cards` array) + link buttons
+   (case study, Behance, LinkedIn) + a 3D mockup button.
+   ========================================================================== */
+
+const LINKEDIN = "https://www.linkedin.com/in/abrar-ayman";
+const BEHANCE_PROFILE = "https://www.behance.net/abrarayman2";
+
+const PROJECTS = [
+  {
+    slug: "gahez",
+    title: "Gahez ?",
+    hue: "quasar",                        // any hue from the portfolio tokens: quasar pulsar corona supernova flare nebula solstice orbit tidal aurora
+    tag: "Event Discovery · Planning & Ticketing",
+    image: "",                            // optional 16:10 cover for the floating card, e.g. "img/gahez-cover.webp" (leave "" for a generated one)
+    screen: "gahez.svg",                  // screenshot used by the 3D mockup on the project page
+    case: "https://abrarayman27.github.io/gahez-case-study/",
+    behance: "https://www.behance.net/abrarayman2",
+    summary: "An event discovery and planning platform that helps people explore experiences, coordinate with friends, build personalized plans, and book tickets in one seamless journey.",
+    // Optional: override any of the 5 duo cards. Missing fields fall back to placeholders.
+    // { title, body, cover, day, night, stats: [["00","label\nline two"], …3] }
+    // cover = folded portrait photo (≈315:458) · day/night = the SAME 630:458 picture at two moments
+    cards: [
+      { body: "Finding events is only half the challenge. This app turns ideas into real plans." },
+    ],
+  },
+  {
+    slug: "soul-support",
+    title: "Soul Support",
+    hue: "nebula",
+    tag: "Mental Health App · UI/UX · AI",
+    image: "",
+    screen: "soul.png",
+    case: "https://abrarayman27.github.io/soulsupport-ux-case-study/",
+    behance: "https://www.behance.net/gallery/257253445/SoulSupport-A-Mental-Health-App",
+    summary: "An AI-powered mental health app that delivers personalized therapy plans, mood tracking, and supportive interactions, focused on emotional comfort and usability. Best Graduation Project at Alexandria University.",
+    cards: [
+      { body: "Affordable, personalized mental health support with comfort and usability first." },
+    ],
+  },
+  {
+    slug: "nabta",
+    title: "Nabta",
+    hue: "tidal",
+    tag: "Mobile App · Branding · Well-being",
+    image: "",
+    screen: "nabta.svg",
+    case: "https://abrarayman27.github.io/Nabta/",
+    behance: "https://www.behance.net/gallery/257586503/Nabta-Mobile-App-Case-Study",
+    summary: "An end-to-end plant ownership experience that connects personalized plant discovery, transparent purchasing, ongoing care, and AI-assisted plant health guidance in one cohesive mobile app.",
+    cards: [
+      { body: "From choosing the right plant to keeping it healthy, in one calm mobile experience." },
+    ],
+  },
+  // ---- placeholders: edit or delete (the ribbon works with any number ≥ 4) ----
+  { slug: "project-04", title: "Project 04", hue: "corona",    tag: "Coming soon", image: "", screen: "", case: "", behance: BEHANCE_PROFILE, summary: "Add your project description here.", cards: [] },
+  { slug: "project-05", title: "Project 05", hue: "supernova", tag: "Coming soon", image: "", screen: "", case: "", behance: BEHANCE_PROFILE, summary: "Add your project description here.", cards: [] },
+  { slug: "project-06", title: "Project 06", hue: "orbit",     tag: "Coming soon", image: "", screen: "", case: "", behance: BEHANCE_PROFILE, summary: "Add your project description here.", cards: [] },
+];
+
+const DEFAULT_CARDS = [
+  { title: "Overview",           body: "Add a short paragraph about this part of the project here." },
+  { title: "Research",           body: "Add a short paragraph about your research and key insights." },
+  { title: "Flows & Wireframes", body: "Add a short paragraph about the structure and the flows." },
+  { title: "UI Design",          body: "Add a short paragraph about the visual design decisions." },
+  { title: "Outcome",            body: "Add a short paragraph about the result and what you learned." },
+];
+const DEFAULT_STATS = [["00", "Add your\nmetric"], ["00", "Add your\nmetric"], ["00", "Add your\nmetric"]];
+
+/* -------------------------------------------------------------------------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const hueHex = (h) => getComputedStyle(document.documentElement).getPropertyValue(`--colour-${h}`).trim() || "#bf9ff1";
+const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+for (const p of PROJECTS) {
+  p.cardList = DEFAULT_CARDS.map((d, i) => ({ ...d, stats: DEFAULT_STATS, cover: "", day: "", night: "", ...(p.cards?.[i] || {}) }));
+}
+
+let galleryPaused = false;       // true while a project page is open
+let openProject;                 // set below
+
+/* ==========================================================================
+   1. PROJECT PAGE + DUO CARDS
+   ========================================================================== */
+const cssUrl = (u) => (u ? `url("${String(u).replace(/"/g, "%22")}")` : "");
+
+function pb(kind, inner) {
+  return `<span class="pb pb--${kind}"><span class="pb__c">${inner}</span><span class="pb__c pb__c--soft" aria-hidden="true">${inner}</span><span class="pb__c pb__c--hard" aria-hidden="true">${inner}</span></span>`;
+}
+
+function duoHTML(c, hue) {
+  const fbCover = `linear-gradient(160deg, var(--colour-${hue}-light), var(--colour-${hue}) 45%, var(--colour-${hue}-dark))`;
+  const fbDay = `linear-gradient(115deg, var(--colour-${hue}-light), var(--colour-${hue}) 50%, var(--colour-${hue}-dark))`;
+  const fbNight = `linear-gradient(115deg, #0b1226, var(--colour-${hue}-deep) 55%, #02060d)`;
+  const style = `--img-cover:${cssUrl(c.cover) || fbCover};--img-day:${cssUrl(c.day) || fbDay};--img-night:${cssUrl(c.night) || fbNight}`;
+  const text = `<span class="duo__title">${esc(c.title)}</span><span class="duo__body">${esc(c.body)}</span>`;
+  const stats = c.stats.slice(0, 3).map(([v, l]) =>
+    `<span class="duo__stat" data-stat><span class="duo__circle"><span class="duo__value">${esc(v)}</span></span><span class="duo__label">${esc(l)}</span></span>`).join("");
+  return `<span class="gp__cell"><button type="button" class="duo" data-state="folded" aria-expanded="false" aria-label="${esc(c.title)}" style="${style}">
+    <span class="duo__flap">
+      <span class="duo__face duo__cover" data-face="cover">${pb("cover", `<span class="duo__photo duo__photo--cover"></span>${text}`)}</span>
+      <span class="duo__face duo__inside" data-face="inside" aria-hidden="true">${pb("inside", `<span class="duo__photo duo__day"></span><span class="duo__photo duo__night"></span>${text}`)}</span>
+    </span>
+    <span class="duo__right" data-face="right" aria-hidden="true"><span class="duo__photo duo__day"></span><span class="duo__photo duo__night"></span><span class="duo__stats">${stats}</span></span>
+  </button></span>`;
+}
+
+const DUR = 1.5;
+const sineInOut = (x) => -(Math.cos(Math.PI * x) - 1) / 2;
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const rnd = (n) => Math.round(n * 10000) / 10000;
+
+function initDuo(btn) {
+  const cell = btn.parentElement;
+  const stats = $$("[data-stat]", btn);
+  const cover = $('[data-face="cover"]', btn), inside = $('[data-face="inside"]', btn), right = $('[data-face="right"]', btn);
+  let t = 0, dir = 0, open = false, raf = 0, last = 0;
+
+  const apply = () => {
+    const p = sineInOut(t / DUR);
+    const angle = p * Math.PI, cos = Math.cos(angle);
+    const st = btn.style;
+    st.setProperty("--turn", `${rnd(180 - p * 180)}deg`);
+    st.setProperty("--spread", String(rnd(Math.max(0, -cos))));
+    st.setProperty("--night", String(rnd((1 - cos) / 2)));
+    st.setProperty("--blur-cover", String(rnd(Math.sin(angle))));
+    st.setProperty("--blur-inside", String(rnd(Math.sin(angle) ** 2)));
+    st.setProperty("--hinge-k", String(rnd(Math.max(0, cos))));
+    stats.forEach((s, i) => {
+      const r = clamp01((t - (1.08 + 0.09 * i)) / 0.2);
+      s.style.setProperty("--reveal", String(rnd(1 - (1 - r) * (1 - r))));
+    });
+    btn.dataset.state = t <= 0 ? "folded" : t >= DUR ? "open" : "moving";
+  };
+  const tick = (now) => {
+    const dt = Math.min((now - last) / 1000, 0.05); last = now;
+    t = Math.min(DUR, Math.max(0, t + dir * dt));
+    apply();
+    if ((dir > 0 && t >= DUR) || (dir < 0 && t <= 0)) { dir = 0; raf = 0; return; }
+    raf = requestAnimationFrame(tick);
+  };
+  const aria = () => {
+    btn.setAttribute("aria-expanded", String(open));
+    cover.setAttribute("aria-hidden", String(open));
+    inside.setAttribute("aria-hidden", String(!open));
+    right.setAttribute("aria-hidden", String(!open));
+  };
+  btn.addEventListener("click", () => {
+    open = !open; aria();
+    if (reducedMotion()) {
+      cell.style.opacity = "0";
+      setTimeout(() => { cancelAnimationFrame(raf); raf = 0; dir = 0; t = open ? DUR : 0; apply(); cell.style.opacity = "1"; }, 150);
+      return;
+    }
+    dir = open ? 1 : -1;
+    if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
+  });
+  stats.forEach((s) => s.style.setProperty("--reveal", "0"));
+  apply();
+}
+
+function linkBtn(href, label) {
+  return href ? `<a class="gbtn" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${label} <span aria-hidden="true">↗</span></a>` : "";
+}
+
+function pageHTML(p, index) {
+  const num = String(index + 1).padStart(2, "0");
+  const mock = `<button type="button" class="gbtn gbtn--solid" data-mockup data-title="${esc(p.title)}" data-hue="${p.hue}" data-screen="${esc(p.screen || "")}" data-case="${esc(p.case || "#")}" data-behance="${esc(p.behance || BEHANCE_PROFILE)}">3D mockup <span aria-hidden="true">◐</span></button>`;
+  const links = `${linkBtn(p.case, "Case study")}${linkBtn(p.behance, "Behance")}${linkBtn(LINKEDIN, "LinkedIn")}`;
+  return `
+  <div class="gp__bar"><div class="gp__wrap">
+    <button type="button" class="gbtn" data-gp-close><span aria-hidden="true" style="transform:none">←</span> Back</button>
+    <span class="gp__crumb">gallery <b>/ ${num}</b></span>
+  </div></div>
+  <div class="gp__wrap">
+    <header class="gp__hero">
+      <p class="gp__eyebrow">${esc(p.tag)}</p>
+      <h2 class="gp__title" id="gp-title">${esc(p.title)}</h2>
+      <p class="gp__summary type-p-lg">${esc(p.summary)}</p>
+      <div class="gp__links">${mock}${links}</div>
+    </header>
+    <div class="gp__section-label"><h3>Project story</h3><span>click a card to open it</span></div>
+    <div class="gp__cards">${p.cardList.map((c) => duoHTML(c, p.hue)).join("")}</div>
+    <div class="gp__foot">
+      <button type="button" class="gbtn" data-gp-close><span aria-hidden="true" style="transform:none">←</span> Back to gallery</button>
+      <div class="gp__links" style="margin:0">${links}</div>
+    </div>
+  </div>`;
+}
+
+const page = document.createElement("div");
+page.className = "gpage"; page.id = "gpage"; page.setAttribute("role", "dialog"); page.setAttribute("aria-modal", "true");
+page.setAttribute("aria-labelledby", "gp-title"); page.setAttribute("aria-hidden", "true");
+document.body.appendChild(page);
+
+let current = null, lastFocus = null, savedY = 0, hideTimer = 0;
+const background = () => $$("body > header, body > main, body > footer, body > .mobile-menu");
+
+function showPage(p) {
+  if (current === p) return;
+  if (!current) { savedY = window.scrollY; lastFocus = document.activeElement; }
+  clearTimeout(hideTimer);
+  current = p;
+  const index = PROJECTS.indexOf(p);
+  page.style.setProperty("--hue", `var(--colour-${p.hue})`);
+  page.innerHTML = pageHTML(p, index);
+  $$(".duo", page).forEach(initDuo);
+  page.scrollTop = 0;
+  page.setAttribute("aria-hidden", "false");
+  background().forEach((el) => (el.inert = true));
+  document.documentElement.style.overflow = "hidden";
+  galleryPaused = true;
+  requestAnimationFrame(() => { page.classList.add("is-open"); $("[data-gp-close]", page)?.focus({ preventScroll: true }); });
+}
+function hidePage() {
+  if (!current) return;
+  current = null;
+  page.classList.remove("is-open");
+  page.setAttribute("aria-hidden", "true");
+  background().forEach((el) => (el.inert = false));
+  document.documentElement.style.overflow = "";
+  galleryPaused = false;
+  window.scrollTo({ top: savedY, behavior: "instant" });
+  lastFocus?.focus?.({ preventScroll: true });
+  hideTimer = setTimeout(() => { page.innerHTML = ""; }, 600);
+}
+function route() {
+  const m = location.hash.match(/^#\/gallery\/([\w-]+)/);
+  const p = m && PROJECTS.find((x) => x.slug === m[1]);
+  p ? showPage(p) : hidePage();
+}
+openProject = (p) => { history.pushState({ gp: 1 }, "", `#/gallery/${p.slug}`); route(); };
+const closeProject = () => (history.state?.gp ? history.back() : (location.hash = "#gallery"));
+
+page.addEventListener("click", (e) => { if (e.target.closest("[data-gp-close]")) closeProject(); });
+addEventListener("popstate", route);
+addEventListener("hashchange", route);
+addEventListener("keydown", (e) => { if (e.key === "Escape" && current && !$("dialog[open]")) closeProject(); });
+route();
+
+/* ==========================================================================
+   2. GALLERY RIBBON (three.js) — cards float on the bending ribbon, no ocean
+   ========================================================================== */
+const section = $("#gallery");
+const stage = $("#galleryStage");
+
+async function initRibbon() {
+  const THREE = await import("https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js");
+
+  // ---- constants (from the afloat prompt) ----
+  const W = 1.6, H = 1.0, GAP = 0.045, STEP = W + GAP, CORNER = 0.07, LABEL_GAP = 0.05, LABEL_H = 0.11, FOV = 36;
+  const SHAPE = {
+    lift: 0.18, baseAmp: 0.78, baseFreq: 0.5, basePhase: 0, drift: 0.05, concave: 0.15,
+    twist: 0.88, twistFreq: 0.53, twistSpeed: 1.1, waveZ: 0, waveZFreq: 0.85, waveY: 0.28, waveYFreq: 1.35,
+    energy: 0.15, energyMax: 1.0, energyRise: 3.5, energySettle: 1.6,
+  };
+  const HIT_GX = 12, HIT_GY = 8, CY = 0.1;
+  const damp = (a, b, l, dt) => a + (b - a) * (1 - Math.exp(-l * dt));
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const smoothstep = (e0, e1, x) => { const k = clamp((x - e0) / (e1 - e0), 0, 1); return k * k * (3 - 2 * k); };
+  const canHover = matchMedia("(hover: hover)").matches;
+  const n = PROJECTS.length;
+  const loop = n * STEP;
+
+  // ---- renderer ----
+  const canvas = document.createElement("canvas");
+  canvas.setAttribute("aria-label", "Gallery of featured projects. Drag, swipe sideways or use the arrow keys to browse, Enter to open.");
+  canvas.tabIndex = 0;
+  stage.appendChild(canvas);
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: "high-performance" });
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 400);
+
+  // ---- shaders (ribbon + cards + titles) ----
+  const ribbonGLSL = /* glsl */ `
+    uniform float uOffset; uniform float uTime; uniform float uAmp; uniform float uDir;
+    uniform vec4 uBase; uniform vec4 uDyn; uniform vec3 uDyn2; uniform float uLift;
+    vec3 ribbon(vec2 local) {
+      float u = uOffset + local.x;
+      float side = 0.3 + smoothstep(0.2, 2.4, abs(u));
+      float tw = uAmp * uDir * uDyn.x * side * sin(u * uDyn.y - uTime * uDyn.z + 0.6);
+      vec3 p;
+      p.x = u;
+      p.y = local.y * cos(tw);
+      p.z = local.y * sin(tw);
+      p.z += uBase.x * sin(u * uBase.y + uBase.z) - uBase.w * u * u;
+      p.z += uAmp * uDyn.w * sin(u * uDyn2.x + uTime * 0.8);
+      p.y += uAmp * uDyn2.y * (0.5 + 0.5 * sin(u * uDyn2.z - uTime * 1.3));
+      p.y += uLift;
+      return p;
+    }`;
+  const cardVert = ribbonGLSL + /* glsl */ `
+    varying vec2 vUv; varying vec3 vNormal; varying vec3 vView;
+    void main() {
+      vUv = uv;
+      vec2 local = position.xy;
+      const float e = 0.004;
+      vec3 p = ribbon(local);
+      vec3 px = ribbon(local + vec2(e, 0.0));
+      vec3 py = ribbon(local + vec2(0.0, e));
+      vNormal = normalize(normalMatrix * cross(px - p, py - p));
+      vec4 mv = modelViewMatrix * vec4(p, 1.0);
+      vView = -mv.xyz;
+      gl_Position = projectionMatrix * mv;
+    }`;
+  const cardFrag = /* glsl */ `
+    uniform sampler2D uMap; uniform float uMapAspect; uniform vec2 uSize; uniform float uRadius;
+    uniform float uFade; uniform float uAmp; uniform float uHover; uniform vec3 uStroke;
+    varying vec2 vUv; varying vec3 vNormal; varying vec3 vView;
+    float sdRoundBox(vec2 p, vec2 b, float r) { vec2 q = abs(p) - b + r; return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r; }
+    void main() {
+      vec2 p = (vUv - 0.5) * uSize;
+      float d = sdRoundBox(p, uSize * 0.5, uRadius);
+      float aa = fwidth(d) * 1.5;
+      float alpha = 1.0 - smoothstep(-aa, 0.0, d);
+      if (alpha < 0.002) discard;
+      // object-fit: cover
+      vec2 tuv = vUv;
+      float ca = uSize.x / uSize.y;
+      if (uMapAspect < ca) tuv.y = (vUv.y - 0.5) * (uMapAspect / ca) + 0.5;
+      else tuv.x = (vUv.x - 0.5) * (ca / uMapAspect) + 0.5;
+      vec3 col = texture2D(uMap, tuv).rgb;
+      vec3 N = normalize(vNormal);
+      if (!gl_FrontFacing) N = -N;
+      vec3 V = normalize(vView);
+      float facing = clamp(dot(N, V), 0.0, 1.0);
+      col *= mix(0.3, 1.0, smoothstep(0.1, 0.85, facing));
+      vec3 L = normalize(vec3(-0.35, 0.55, 0.8));
+      float spec = pow(clamp(dot(N, normalize(L + V)), 0.0, 1.0), 48.0);
+      col += spec * 0.15 * uAmp;
+      if (!gl_FrontFacing) col *= 0.3;
+      col *= 1.0 + uHover * 0.1;
+      // stroke: a thin rim in the project's hue, brighter on hover
+      float sw = 0.007 + uHover * 0.003;
+      float rim = smoothstep(-sw - aa, -sw, d);
+      col = mix(col, uStroke, rim * (0.85 + 0.15 * uHover));
+      gl_FragColor = vec4(col, alpha * uFade);
+      #include <colorspace_fragment>
+    }`;
+  const titleVert = ribbonGLSL + /* glsl */ `
+    varying vec2 vUv;
+    void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(ribbon(position.xy), 1.0); }`;
+  const titleFrag = /* glsl */ `
+    uniform sampler2D uLabel; uniform vec3 uLabelColor; uniform float uFade; varying vec2 vUv;
+    void main() {
+      float a = texture2D(uLabel, vUv).a * uFade;
+      if (a < 0.01) discard;
+      gl_FragColor = vec4(uLabelColor, a);
+      #include <colorspace_fragment>
+    }`;
+
+  const shared = {
+    uTime: { value: 0 }, uAmp: { value: 0 }, uDir: { value: 0 }, uFade: { value: 0 },
+    uBase: { value: new THREE.Vector4() }, uDyn: { value: new THREE.Vector4() }, uDyn2: { value: new THREE.Vector3() },
+    uSize: { value: new THREE.Vector2(W, H) }, uRadius: { value: CORNER }, uLift: { value: SHAPE.lift },
+    uLabelColor: { value: new THREE.Color("#f4f2ee") },
+  };
+
+  // ---- textures: generated poster (or your own image), title strip ----
+  const maxAniso = renderer.capabilities.getMaxAnisotropy();
+  function makePoster(p, i) {
+    const c = document.createElement("canvas"); c.width = 1440; c.height = 900;
+    const g = c.getContext("2d");
+    const hex = hueHex(p.hue);
+    const grad = g.createLinearGradient(0, 0, 1440, 900);
+    const base = new THREE.Color(hex);
+    const light = base.clone().lerp(new THREE.Color(1, 1, 1), 0.35).getStyle();
+    const dark = base.clone().lerp(new THREE.Color(0, 0, 0), 0.55).getStyle();
+    grad.addColorStop(0, light); grad.addColorStop(0.5, hex); grad.addColorStop(1, dark);
+    g.fillStyle = grad; g.fillRect(0, 0, 1440, 900);
+    g.globalAlpha = 0.18; g.fillStyle = "#fff";
+    g.beginPath(); g.arc(1180, 160, 320, 0, Math.PI * 2); g.fill();
+    g.globalAlpha = 0.12; g.fillStyle = "#000";
+    g.beginPath(); g.arc(200, 820, 360, 0, Math.PI * 2); g.fill();
+    g.globalAlpha = 1;
+    g.fillStyle = "rgba(18,18,19,0.9)";
+    g.font = '800 420px "Parkinsans", "Inter", sans-serif'; g.textBaseline = "alphabetic";
+    g.fillText(String(i + 1).padStart(2, "0"), 70, 800);
+    g.font = '500 38px "JetBrains Mono", monospace';
+    g.fillText(p.tag.toUpperCase(), 80, 120);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = maxAniso;
+    return t;
+  }
+  function makeLabel(title) {
+    const w = 2048, h = Math.round((w * LABEL_H) / W);
+    const c = document.createElement("canvas"); c.width = w; c.height = h;
+    const g = c.getContext("2d");
+    g.font = `600 ${Math.round(h * 0.62)}px "Parkinsans", "Inter", "Helvetica Neue", Arial, sans-serif`;
+    if ("letterSpacing" in g) g.letterSpacing = "-2px";
+    g.fillStyle = "#fff"; g.fillText(title, 4, Math.round(h * 0.74));
+    const t = new THREE.CanvasTexture(c); t.anisotropy = maxAniso;
+    return t;
+  }
+  try { await Promise.race([document.fonts.load('600 64px "Parkinsans"'), new Promise((r) => setTimeout(r, 2500))]); await document.fonts.ready; } catch {}
+
+  const cardGeo = new THREE.PlaneGeometry(W, H, 64, 40);
+  const labelGeo = new THREE.PlaneGeometry(W, LABEL_H, 64, 1);
+  labelGeo.translate(0, -(H / 2 + LABEL_GAP + LABEL_H / 2), 0);
+
+  const cards = PROJECTS.map((p, index) => {
+    const offset = { value: 0 };
+    const tex = makePoster(p, index);
+    const mat = new THREE.ShaderMaterial({
+      uniforms: { ...shared, uMap: { value: tex }, uMapAspect: { value: 1.6 }, uOffset: offset, uHover: { value: 0 }, uStroke: { value: new THREE.Color(hueHex(p.hue)) } },
+      vertexShader: cardVert, fragmentShader: cardFrag, transparent: true, side: THREE.DoubleSide, forceSinglePass: true,
+    });
+    const mesh = new THREE.Mesh(cardGeo, mat); mesh.frustumCulled = false; scene.add(mesh);
+    const lmat = new THREE.ShaderMaterial({
+      uniforms: { ...shared, uLabel: { value: makeLabel(p.title) }, uOffset: offset },
+      vertexShader: titleVert, fragmentShader: titleFrag, transparent: true, depthWrite: false,
+    });
+    const lmesh = new THREE.Mesh(labelGeo, lmat); lmesh.frustumCulled = false; scene.add(lmesh);
+    if (p.image) {
+      new THREE.TextureLoader().load(p.image, (t) => {
+        t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = maxAniso;
+        mat.uniforms.uMap.value = t; mat.uniforms.uMapAspect.value = t.image.width / t.image.height;
+      }, undefined, () => {});
+    }
+    return { index, project: p, mesh, labelMesh: lmesh, material: mat, offset: 0, visible: true, hover: 0 };
+  });
+
+  // ---- state ----
+  const state = {
+    width: 1, height: 1, dpr: 1, aspect: 1, distance: 6, visibleHalf: 2, unitsPerPx: 0.003,
+    scroll: { current: 0, target: 0, last: 0 }, vel: 0, amp: 0, dir: 0, fade: 0,
+    pointer: { ndc: new THREE.Vector2(), inside: false }, drag: null, hovered: null, idle: 0, waiting: true,
+  };
+  const v3 = new THREE.Vector3();
+  const grid = new Float32Array((HIT_GX + 1) * (HIT_GY + 1) * 3);
+
+  function applyShape() {
+    const baseAmp = state.aspect < 1 ? SHAPE.baseAmp / 3 : SHAPE.baseAmp;
+    shared.uBase.value.set(baseAmp, SHAPE.baseFreq, SHAPE.basePhase, SHAPE.concave);
+    shared.uDyn.value.set(SHAPE.twist, SHAPE.twistFreq, SHAPE.twistSpeed, SHAPE.waveZ);
+    shared.uDyn2.value.set(SHAPE.waveZFreq, SHAPE.waveY, SHAPE.waveYFreq);
+    shared.uLift.value = SHAPE.lift;
+  }
+  function resize() {
+    const r = stage.getBoundingClientRect();
+    const width = Math.max(1, Math.round(r.width)), height = Math.max(1, Math.round(r.height));
+    state.dpr = Math.min(devicePixelRatio || 1, 2);
+    renderer.setPixelRatio(state.dpr);
+    renderer.setSize(width, height, false);
+    const aspect = width / height;
+    camera.aspect = aspect; state.aspect = aspect;
+    const frac = aspect < 1 ? 0.82 : Math.min(clamp(0.52 - (aspect - 1.3) * 0.1, 0.34, 0.5), 0.914 / aspect);
+    const visibleW = W / frac, visibleH = visibleW / aspect;
+    state.distance = visibleH / 2 / Math.tan(THREE.MathUtils.degToRad(FOV / 2));
+    state.visibleHalf = visibleW / 2; state.unitsPerPx = visibleW / width;
+    camera.updateProjectionMatrix();
+    state.width = width; state.height = height;
+    applyShape();
+  }
+
+  // CPU twin of the vertex shader (hit-testing)
+  function ribbonPoint(lx, ly, offset, out) {
+    const amp = shared.uAmp.value, dir = shared.uDir.value, t = shared.uTime.value, base = shared.uBase.value, s = SHAPE;
+    const u = offset + lx;
+    const side = 0.3 + smoothstep(0.2, 2.4, Math.abs(u));
+    const tw = amp * dir * s.twist * side * Math.sin(u * s.twistFreq - t * s.twistSpeed + 0.6);
+    let y = ly * Math.cos(tw), z = ly * Math.sin(tw);
+    z += base.x * Math.sin(u * base.y + base.z) - base.w * u * u;
+    z += amp * s.waveZ * Math.sin(u * s.waveZFreq + t * 0.8);
+    y += amp * s.waveY * (0.5 + 0.5 * Math.sin(u * s.waveYFreq - t * 1.3));
+    y += s.lift;
+    return out.set(u, y, z);
+  }
+  function triDepth(p, g, ia, ib, ic) {
+    const ax = g[ia * 3], ay = g[ia * 3 + 1], bx = g[ib * 3], by = g[ib * 3 + 1], cx = g[ic * 3], cy = g[ic * 3 + 1];
+    const det = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy);
+    if (Math.abs(det) < 1e-9) return Infinity;
+    const w0 = ((by - cy) * (p.x - cx) + (cx - bx) * (p.y - cy)) / det;
+    const w1 = ((cy - ay) * (p.x - cx) + (ax - cx) * (p.y - cy)) / det;
+    const w2 = 1 - w0 - w1;
+    if (w0 < 0 || w1 < 0 || w2 < 0) return Infinity;
+    return w0 * g[ia * 3 + 2] + w1 * g[ib * 3 + 2] + w2 * g[ic * 3 + 2];
+  }
+  function hitTest(ndc) {
+    let best = null, bestZ = Infinity;
+    const row = HIT_GX + 1;
+    for (const card of cards) {
+      if (!card.visible) continue;
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      for (let j = 0; j <= HIT_GY; j++) for (let i = 0; i <= HIT_GX; i++) {
+        const ly = H / 2 - (j / HIT_GY) * (H + LABEL_GAP + LABEL_H);
+        ribbonPoint((i / HIT_GX - 0.5) * W, ly, card.offset, v3).project(camera);
+        const k = (j * row + i) * 3;
+        grid[k] = v3.x; grid[k + 1] = v3.y; grid[k + 2] = v3.z;
+        if (v3.x < minX) minX = v3.x; if (v3.x > maxX) maxX = v3.x;
+        if (v3.y < minY) minY = v3.y; if (v3.y > maxY) maxY = v3.y;
+      }
+      if (ndc.x < minX || ndc.x > maxX || ndc.y < minY || ndc.y > maxY) continue;
+      for (let j = 0; j < HIT_GY; j++) for (let i = 0; i < HIT_GX; i++) {
+        const a = j * row + i;
+        const z = Math.min(triDepth(ndc, grid, a, a + 1, a + row + 1), triDepth(ndc, grid, a, a + row + 1, a + row));
+        if (z < bestZ) { bestZ = z; best = card; }
+      }
+    }
+    return best;
+  }
+
+  const centerIndex = () => ((Math.round(state.scroll.current / STEP) % n) + n) % n;
+  const snap = (d) => { state.scroll.target = (Math.round(state.scroll.target / STEP) + d) * STEP; state.idle = 0; };
+
+  // ---- input ----
+  const setPointer = (e) => {
+    const r = canvas.getBoundingClientRect();
+    state.pointer.ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    state.pointer.inside = true;
+  };
+  canvas.addEventListener("wheel", (e) => {
+    const horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.shiftKey;
+    if (!horizontal) return;                       // vertical wheel keeps scrolling the page
+    e.preventDefault();
+    const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? state.width : 1;
+    const d = Math.abs(e.deltaX) >= Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    state.scroll.target += d * unit * 0.0026; state.idle = 0;
+  }, { passive: false });
+  canvas.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0) return;
+    canvas.setPointerCapture(e.pointerId); setPointer(e);
+    state.drag = { id: e.pointerId, x: e.clientX, moved: 0, vx: 0, t: performance.now(), card: hitTest(state.pointer.ndc) };
+    state.idle = 0;
+  });
+  canvas.addEventListener("pointermove", (e) => {
+    setPointer(e);
+    const d = state.drag;
+    if (!d || d.id !== e.pointerId) return;
+    const dx = e.clientX - d.x, now = performance.now(), dt = Math.max((now - d.t) / 1000, 1 / 240);
+    d.vx = damp(d.vx, dx / dt, 18, dt); d.x = e.clientX; d.t = now; d.moved += Math.abs(dx);
+    if (d.moved > 6) canvas.dataset.dragging = "";
+    state.scroll.target -= dx * state.unitsPerPx * 1.1; state.idle = 0;
+  });
+  const endDrag = (e) => {
+    const d = state.drag;
+    if (!d || d.id !== e.pointerId) return;
+    state.drag = null; delete canvas.dataset.dragging;
+    if (e.pointerType !== "mouse") state.pointer.inside = false;
+    if (d.moved < 6) { if (d.card && e.type === "pointerup") openProject(d.card.project); }
+    else if (performance.now() - d.t < 80) state.scroll.target -= d.vx * state.unitsPerPx * 0.22;
+  };
+  canvas.addEventListener("pointerup", endDrag);
+  canvas.addEventListener("pointercancel", endDrag);
+  canvas.addEventListener("pointerleave", () => { state.pointer.inside = false; });
+  canvas.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") { e.preventDefault(); snap(1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); snap(-1); }
+    else if (e.key === "Enter") { e.preventDefault(); openProject(PROJECTS[centerIndex()]); }
+  });
+
+  // ---- per-frame update ----
+  const motion = () => (reducedMotion() ? 0.3 : 1);
+  function update(dt, time) {
+    const s = state.scroll;
+    state.idle += dt;
+    s.current = damp(s.current, s.target, state.drag ? 11 : 4, dt);
+    const vel = (s.current - s.last) / Math.max(dt, 1e-4); s.last = s.current;
+    state.vel = damp(state.vel, vel, 7, dt);
+    const ampTarget = Math.min(Math.abs(state.vel) * SHAPE.energy, SHAPE.energyMax) * motion() + 0.03;
+    state.amp = damp(state.amp, ampTarget, ampTarget > state.amp ? SHAPE.energyRise : SHAPE.energySettle, dt);
+    state.dir = damp(state.dir, clamp(state.vel * 2.5, -1, 1), 2, dt);
+    state.fade = damp(state.fade, state.waiting ? 0 : 1, state.waiting ? 8 : 1.8, dt);
+
+    shared.uTime.value = time; shared.uAmp.value = state.amp; shared.uDir.value = state.dir; shared.uFade.value = state.fade;
+    shared.uBase.value.z = SHAPE.basePhase + Math.sin(time * SHAPE.drift) * 0.5;
+
+    camera.position.set(0, CY, state.distance); camera.lookAt(0, CY, 0); camera.updateMatrixWorld();
+
+    const range = state.visibleHalf + STEP * 1.25;
+    for (const card of cards) {
+      const raw = card.index * STEP - s.current + loop / 2;
+      card.offset = (((raw % loop) + loop) % loop) - loop / 2;
+      card.visible = Math.abs(card.offset) < range;
+      card.mesh.visible = card.visible; card.labelMesh.visible = card.visible;
+      card.material.uniforms.uOffset.value = card.offset;
+    }
+    state.hovered = canHover && state.pointer.inside && !state.drag ? hitTest(state.pointer.ndc) : null;
+    if (state.hovered) canvas.dataset.hover = "card"; else if (canvas.dataset.hover === "card") delete canvas.dataset.hover;
+    if (state.hovered) state.idle = 0;
+    for (const card of cards) card.hover = damp(card.hover, card === state.hovered ? 1 : 0, 7, dt), (card.material.uniforms.uHover.value = card.hover);
+  }
+
+  // ---- loop: only while the section is on screen and no project page is open ----
+  let visible = false, running = false, prev = performance.now(), clock = 0;
+  const frame = (now) => {
+    const dt = Math.min((now - prev) / 1000, 1 / 20); prev = now; clock += dt;
+    if (galleryPaused) return;
+    update(dt, clock);
+    renderer.render(scene, camera);
+  };
+  const sync = () => {
+    const want = visible && !document.hidden;
+    if (want && !running) { prev = performance.now(); renderer.setAnimationLoop(frame); running = true; }
+    else if (!want && running) { renderer.setAnimationLoop(null); running = false; }
+  };
+  // keep rendering while the section is on (or just next to) the screen
+  new IntersectionObserver((es) => { visible = es[0].isIntersecting; sync(); }, { rootMargin: "120px 0px" }).observe(stage);
+  // replay the intro every time the section is opened: cards sweep in from the right, then glide to a stop
+  new IntersectionObserver((es) => {
+    const e = es[0];
+    if (e.isIntersecting && e.intersectionRatio >= 0.25 && state.waiting) {
+      state.waiting = false;
+      const s = state.scroll;
+      s.current = s.last = s.target - 3.5 * STEP;
+      state.vel = 0; state.amp = 0; state.dir = 0; state.idle = 0;
+    } else if (!e.isIntersecting) {
+      state.waiting = true;
+    }
+  }, { threshold: [0, 0.25] }).observe(stage);
+  document.addEventListener("visibilitychange", sync);
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  canvas.addEventListener("webglcontextlost", (e) => e.preventDefault());
+}
+
+if (stage) {
+  initRibbon().catch((err) => {
+    console.warn("Gallery ribbon unavailable:", err);
+    section?.classList.add("no-webgl");
+  });
+  // plain-link fallback (shown only if WebGL / three.js can't load)
+  const fb = $("#galleryFallback");
+  if (fb) {
+    fb.innerHTML = PROJECTS.map((p) => `<a href="#/gallery/${p.slug}">${esc(p.title)}</a>`).join("");
+    fb.addEventListener("click", (e) => {
+      const a = e.target.closest("a"); if (!a) return;
+      e.preventDefault(); openProject(PROJECTS.find((p) => a.getAttribute("href").endsWith(p.slug)));
+    });
+  }
+}
+
 </script>
 </body>
 </html>
